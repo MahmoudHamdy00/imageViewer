@@ -15,7 +15,7 @@ namespace imageViewer
     public partial class Form1 : Form
     {
 
-        private Thread thread;
+        // private Thread thread;
         private List<Panel> panels;
         List<PictureBox> pictureBoxes;
 
@@ -142,7 +142,7 @@ namespace imageViewer
                 panels.Add(new Panel());
                 pictureBoxes.Add(new PictureBox());
 
-                Image img = Image.FromFile(s[0]);
+               // Image img = Image.FromFile(s[0]);
                 data[0 + ""] = s[0];
                 pictureBoxes[0] = new PictureBox()
                 {
@@ -169,7 +169,7 @@ namespace imageViewer
                 panels.Add(new Panel());
                 pictureBoxes.Add(new PictureBox());
 
-                Image img = Image.FromFile(s[i]);
+                //   Image img = Image.FromFile(s[i]);
                 data[i + ""] = s[i];
                 pictureBoxes[i] = new PictureBox()
                 {
@@ -183,6 +183,7 @@ namespace imageViewer
                     Top = 2,
                     BackColor = mainPanel.BackColor,
                 };
+                //  pictureBoxes[i].Image = new Bitmap(s[i]);
                 pictureBoxes[i].Load(s[i]);
                 pictureBoxes[i].MouseHover += Form1_MouseHover;
                 pictureBoxes[i].MouseLeave += Form1_MouseLeave;
@@ -219,6 +220,33 @@ namespace imageViewer
                         //pictureBoxes[k].botom = borders;
                     }
                 }
+
+
+                // Add a tooltip.
+                FileInfo file_info = new FileInfo(s[i]);
+                var units = new[] { "B", "KB", "MB", "GB", "TB" };
+                var index = 0;
+                long size = file_info.Length;
+                while (size > 1024)
+                {
+                    size /= 1024;
+                    index++;
+                }
+                string sz = string.Format("{0} {1}", size, units[index]);
+
+                ToolTip tipPicture = new ToolTip();
+                tipPicture.SetToolTip(
+                    pictureBoxes[i],
+                    file_info.Name +
+                    "\nItem type: " + file_info.Extension.Substring(1).ToUpper() +
+                    "\nDimensions: " + pictureBoxes[i].Image.Width + " x " + pictureBoxes[i].Image.Height +
+                    "\nSize: " + sz +
+                    "\nCreated: " + file_info.CreationTime.ToShortDateString()
+                    );
+           
+                pictureBoxes[i].Tag = file_info;
+
+
                 mainPanel.Controls.Add(panels[i]);
             }
             //}
@@ -227,6 +255,7 @@ namespace imageViewer
                 ShowError(ex.Message);
             }*/
         }
+
         private void Form1_MouseLeave(object sender, EventArgs e)
         {
             try
