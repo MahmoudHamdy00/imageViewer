@@ -61,6 +61,9 @@ namespace imageViewer
             timer.Interval = 1000;          //change image every 1 sec
 
             path.Text = initialFolderToBrowse;
+            ToolTip showAllToolTip = new ToolTip();
+            showAllToolTip.SetToolTip(ShowAllButton, "Show All image in the specified directory\nNote: all images in the ListBox will be removed");
+
             UpdatePanel();                          //preview the images in the picture folder on startup              
         }
         private void ShowError(string message)
@@ -370,7 +373,7 @@ namespace imageViewer
             listBox1.SelectedIndex = idx;
 
             toolStripStatusLabel1.Text = listBox1.Items[idx].ToString();
-            toolStripProgressBar1.Value = ((idx) * 100 / listBox1.Items.Count) % 100;
+            // toolStripProgressBar1.Value = ((idx+1) * 100 / listBox1.Items.Count);
             /*}
             catch (Exception ex)
             {
@@ -405,7 +408,7 @@ namespace imageViewer
         private void Timer_Tick(object sender, EventArgs e)
         {
             NextPicture();
-            // progressBar1.PerformStep();
+            toolStripProgressBar1.PerformStep();
         }
 
         //SlideShowSection
@@ -430,6 +433,7 @@ namespace imageViewer
             mainPanel.Width = Screen.PrimaryScreen.Bounds.Width - 50;
             this.WindowState = FormWindowState.Maximized;
 
+            modesToolStripMenuItem.Visible = false;
             statusStrip2.Visible = false;
             listBox1.Visible = false;
             ShowAllButton.Visible = false;
@@ -442,12 +446,15 @@ namespace imageViewer
             statusStrip1.Visible = true;
             StopSlidShowButton.Visible = true;
             toolStripProgressBar1.Value = 0;
+            toolStripProgressBar1.Step = (100 / listBox1.Items.Count);
+            toolStripProgressBar1.PerformStep();
             path.Visible = false;
 
             timer.Start();
         }
         private void StopSlidShow()
         {
+            modesToolStripMenuItem.Visible = true;
             IsSlideShow = false;
             statusStrip2.Visible = true;
             statusStrip1.Visible = false;
@@ -467,6 +474,16 @@ namespace imageViewer
             path.Visible = true;
 
             StopSlidShowButton.Visible = false;
+        }
+
+        private void SingleMode_Click(object sender, EventArgs e)
+        {
+            listBox1.SelectionMode = SelectionMode.One;
+        }
+
+        private void MultiMode_Click(object sender, EventArgs e)
+        {
+            listBox1.SelectionMode = SelectionMode.MultiExtended;
         }
 
         private void ExitToolStripMenuItem1_Click(object sender, EventArgs e)

@@ -29,6 +29,7 @@ namespace imageViewer
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.path = new System.Windows.Forms.TextBox();
             this.mainPanel = new System.Windows.Forms.Panel();
             this.listBox1 = new System.Windows.Forms.ListBox();
@@ -45,10 +46,19 @@ namespace imageViewer
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.modesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.singleModeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.multiModeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.slideShowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.RotateButton = new System.Windows.Forms.Button();
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.SingleMode_ContextMenuStrip = new System.Windows.Forms.ToolStripMenuItem();
+            this.MultiMode_ContextMenuStrip = new System.Windows.Forms.ToolStripMenuItem();
+            this.SlideShowMode_ContextMenuStrip = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.statusStrip2.SuspendLayout();
             this.menuStrip1.SuspendLayout();
+            this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // path
@@ -191,7 +201,8 @@ namespace imageViewer
             // menuStrip1
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.exitToolStripMenuItem});
+            this.exitToolStripMenuItem,
+            this.modesToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(744, 24);
@@ -213,6 +224,37 @@ namespace imageViewer
             this.exitToolStripMenuItem1.Text = "Exit";
             this.exitToolStripMenuItem1.Click += new System.EventHandler(this.ExitToolStripMenuItem1_Click);
             // 
+            // modesToolStripMenuItem
+            // 
+            this.modesToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.singleModeToolStripMenuItem,
+            this.multiModeToolStripMenuItem,
+            this.slideShowToolStripMenuItem});
+            this.modesToolStripMenuItem.Name = "modesToolStripMenuItem";
+            this.modesToolStripMenuItem.Size = new System.Drawing.Size(55, 20);
+            this.modesToolStripMenuItem.Text = "Modes";
+            // 
+            // singleModeToolStripMenuItem
+            // 
+            this.singleModeToolStripMenuItem.Name = "singleModeToolStripMenuItem";
+            this.singleModeToolStripMenuItem.Size = new System.Drawing.Size(140, 22);
+            this.singleModeToolStripMenuItem.Text = "Single Mode";
+            this.singleModeToolStripMenuItem.Click += new System.EventHandler(this.SingleMode_Click);
+            // 
+            // multiModeToolStripMenuItem
+            // 
+            this.multiModeToolStripMenuItem.Name = "multiModeToolStripMenuItem";
+            this.multiModeToolStripMenuItem.Size = new System.Drawing.Size(140, 22);
+            this.multiModeToolStripMenuItem.Text = "Multi Mode";
+            this.multiModeToolStripMenuItem.Click += new System.EventHandler(this.MultiMode_Click);
+            // 
+            // slideShowToolStripMenuItem
+            // 
+            this.slideShowToolStripMenuItem.Name = "slideShowToolStripMenuItem";
+            this.slideShowToolStripMenuItem.Size = new System.Drawing.Size(140, 22);
+            this.slideShowToolStripMenuItem.Text = "SlideShow";
+            this.slideShowToolStripMenuItem.Click += new System.EventHandler(this.SlideShowButton_Click);
+            // 
             // RotateButton
             // 
             this.RotateButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
@@ -225,12 +267,43 @@ namespace imageViewer
             this.RotateButton.UseVisualStyleBackColor = true;
             this.RotateButton.Click += new System.EventHandler(this.RotateButton_Click);
             // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.SingleMode_ContextMenuStrip,
+            this.MultiMode_ContextMenuStrip,
+            this.SlideShowMode_ContextMenuStrip});
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(181, 92);
+            // 
+            // SingleMode_ContextMenuStrip
+            // 
+            this.SingleMode_ContextMenuStrip.Name = "SingleMode_ContextMenuStrip";
+            this.SingleMode_ContextMenuStrip.Size = new System.Drawing.Size(180, 22);
+            this.SingleMode_ContextMenuStrip.Text = "Single Mode";
+            this.SingleMode_ContextMenuStrip.Click += new System.EventHandler(this.SingleMode_Click);
+            // 
+            // MultiMode_ContextMenuStrip
+            // 
+            this.MultiMode_ContextMenuStrip.Name = "MultiMode_ContextMenuStrip";
+            this.MultiMode_ContextMenuStrip.Size = new System.Drawing.Size(180, 22);
+            this.MultiMode_ContextMenuStrip.Text = "Multi Mode";
+            this.MultiMode_ContextMenuStrip.Click += new System.EventHandler(this.MultiMode_Click);
+            // 
+            // SlideShowMode_ContextMenuStrip
+            // 
+            this.SlideShowMode_ContextMenuStrip.Name = "SlideShowMode_ContextMenuStrip";
+            this.SlideShowMode_ContextMenuStrip.Size = new System.Drawing.Size(180, 22);
+            this.SlideShowMode_ContextMenuStrip.Text = "SlideShow";
+            this.SlideShowMode_ContextMenuStrip.Click += new System.EventHandler(this.SlideShowButton_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Gainsboro;
             this.ClientSize = new System.Drawing.Size(744, 426);
+            this.ContextMenuStrip = this.contextMenuStrip1;
             this.Controls.Add(this.RotateButton);
             this.Controls.Add(this.NextButton);
             this.Controls.Add(this.PreviousButton);
@@ -256,6 +329,7 @@ namespace imageViewer
             this.statusStrip2.PerformLayout();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -280,6 +354,14 @@ namespace imageViewer
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem1;
         private System.Windows.Forms.Button RotateButton;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem modesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem singleModeToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem multiModeToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem slideShowToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem SingleMode_ContextMenuStrip;
+        private System.Windows.Forms.ToolStripMenuItem MultiMode_ContextMenuStrip;
+        private System.Windows.Forms.ToolStripMenuItem SlideShowMode_ContextMenuStrip;
     }
 }
 
