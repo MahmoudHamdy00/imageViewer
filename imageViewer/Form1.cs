@@ -25,8 +25,8 @@ namespace imageViewer
         private readonly Button StopSlidShowButton;                  //to exit slideshow mode
         private bool IsSlideShow;                           //to know which elements to be shown  e.g rotate button  doesn't need to be shown in slideshow mod
 
-        private int x, y;                                   //to store the width and the highet of the main panel to reset it after slideshow ends
-        private Point point;                                //to store the location of the main panel to relocate it after slideshow ends
+        private readonly int x, y;
+        private readonly Point point;                                //to store the location of the main panel to relocate it after slideshow ends
         public Form1()
         {
             InitializeComponent();
@@ -39,6 +39,10 @@ namespace imageViewer
             panels = new List<Panel>();
             pictureBoxes = new List<PictureBox>();
             data = new SortedDictionary<string, string>();
+            x = mainPanel.Width;
+            y = mainPanel.Height;
+            point = mainPanel.Location;
+
 
             IsSlideShow = false;
             statusStrip1.Visible = false;                   //to show the progress and the name of the pic during slideshow mode
@@ -61,9 +65,6 @@ namespace imageViewer
             timer.Interval = 1000;          //change image every 1 sec
 
             path.Text = initialFolderToBrowse;
-            ToolTip showAllToolTip = new ToolTip();
-            showAllToolTip.SetToolTip(ShowAllButton, "Show All image in the specified directory\nNote: all images in the ListBox will be removed");
-
             UpdatePanel();                          //preview the images in the picture folder on startup              
         }
         private void ShowError(string message)
@@ -203,7 +204,7 @@ namespace imageViewer
                 {
                     Name = 0 + "",
                     SizeMode = PictureBoxSizeMode.Zoom,
-                    BackColor = Color.White
+                    BackColor = Color.LightGray
                 };
                 pictureBoxes[0].Load(s[0]);
 
@@ -212,13 +213,14 @@ namespace imageViewer
                 panels[0].Controls.Add(pictureBoxes[0]);
                 mainPanel.Controls.Add(panels[0]);
                 toolStripStatusLabel2.Text = s[0];
+                mainPanel.BackColor = this.BackColor;
                 return;
             }
             RotateButton.Visible = false;
             NextButton.Visible = false;
             PreviousButton.Visible = false;
             toolStripStatusLabel2.Text = path.Text;
-
+            mainPanel.BackColor = Color.Silver;
             int imageWidth = 325, imageHeight = 200;
             for (int i = 0, top = 5, left = 5; i < s.Count; i++)
             {
@@ -401,7 +403,7 @@ namespace imageViewer
 
         private void RotateButton_Click(object sender, EventArgs e)
         {
-            pictureBoxes[0].Image.RotateFlip(RotateFlipType.Rotate90FlipNone);
+            pictureBoxes[0].Image.RotateFlip(RotateFlipType.Rotate270FlipNone);
             this.Refresh();
         }
 
@@ -426,9 +428,6 @@ namespace imageViewer
             IsSlideShow = true;
             listBox1.ClearSelected();
             listBox1.SelectedIndex = 0;
-            x = mainPanel.Width;
-            y = mainPanel.Height;
-            point = mainPanel.Location;
             mainPanel.Dock = DockStyle.Fill;
             mainPanel.Width = Screen.PrimaryScreen.Bounds.Width - 50;
             this.WindowState = FormWindowState.Maximized;
@@ -437,6 +436,7 @@ namespace imageViewer
             statusStrip2.Visible = false;
             listBox1.Visible = false;
             ShowAllButton.Visible = false;
+            HideShowListButton.Visible = false;
             BrowseButton.Visible = false;
             NextButton.Visible = false;
             PreviousButton.Visible = false;
@@ -454,17 +454,18 @@ namespace imageViewer
         }
         private void StopSlidShow()
         {
+            timer.Stop();
             modesToolStripMenuItem.Visible = true;
             IsSlideShow = false;
             statusStrip2.Visible = true;
             statusStrip1.Visible = false;
             mainPanel.Dock = DockStyle.None;
-            timer.Stop();
             mainPanel.Width = x;
             mainPanel.Height = y;
             mainPanel.Location = point;
             listBox1.Visible = true;
             ShowAllButton.Visible = true;
+            HideShowListButton.Visible = true;
             BrowseButton.Visible = true;
             NextButton.Visible = true;
             PreviousButton.Visible = true;
@@ -479,12 +480,58 @@ namespace imageViewer
         private void SingleMode_Click(object sender, EventArgs e)
         {
             listBox1.SelectionMode = SelectionMode.One;
+            if (listBox1.SelectedIndex == -1)
+                listBox1.SelectedIndex = 0;
+            ListBox1_SelectedIndexChanged(this, new EventArgs());//to show a single image
+            CurrentMode.Text = "Single Mode";
         }
 
         private void MultiMode_Click(object sender, EventArgs e)
         {
             listBox1.SelectionMode = SelectionMode.MultiExtended;
+            CurrentMode.Text = "Multi Mode";
         }
+
+        private void HideShowListButton_Click(object sender, EventArgs e)
+        {
+            listBox1.Visible = !listBox1.Visible;
+            if (listBox1.Visible)
+            {
+                HideShowListButton.Text = "Hide Image List";
+                mainPanel.Width = x;
+                mainPanel.Height = y;
+                mainPanel.Location = point;
+                int width = this.Width + listBox1.Width - NextButton.Width - PreviousButton.Width - RotateButton.Width;
+                width >>= 1;
+                PreviousButton.Location = new Point(width, PreviousButton.Location.Y);
+                width += PreviousButton.Width + 5;
+                RotateButton.Location = new Point(width, PreviousButton.Location.Y);
+                width += RotateButton.Width + 5;
+                NextButton.Location = new Point(width, PreviousButton.Location.Y);
+            }
+            else
+            {
+                HideShowListButton.Text = "Show Image List";
+                mainPanel.Location = new Point(HideShowListButton.Location.X, HideShowListButton.Location.Y + HideShowListButton.Height + 10);
+                mainPanel.Width = Screen.PrimaryScreen.Bounds.Width - 10;
+
+                int width = this.Width - NextButton.Width - PreviousButton.Width - RotateButton.Width;
+                width >>= 1;
+                PreviousButton.Location = new Point(width, PreviousButton.Location.Y);
+                width += PreviousButton.Width + 5;
+                RotateButton.Location = new Point(width, PreviousButton.Location.Y);
+                width += RotateButton.Width + 5;
+                NextButton.Location = new Point(width, PreviousButton.Location.Y);
+            }
+        }
+
+        private void apoutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            InfoForm infoForm = new InfoForm();
+            infoForm.Visible = true;
+            return;
+        }
+
 
         private void ExitToolStripMenuItem1_Click(object sender, EventArgs e)
         {
