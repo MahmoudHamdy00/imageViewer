@@ -14,30 +14,37 @@ namespace imageViewer
 {
     public partial class Form1 : Form
     {
+        private readonly string imageExtentions = "*.jpg;*.png;*.jpeg";  //extinsions to be shown
+        private readonly string initialFolderToBrowse = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures);
 
-        // private Thread thread;
-        private List<Panel> panels;
-        List<PictureBox> pictureBoxes;
+        private readonly List<Panel> panels;                 //to store the selected images 
+        private readonly List<PictureBox> pictureBoxes;              //to preview the selected images
 
-        System.Windows.Forms.Timer timer;
-        SortedDictionary<string, string> data;
-        Button StopSlidShowButton;
-        bool IsSlideShow;
+        private readonly System.Windows.Forms.Timer timer;           //to be used in slideshow mode
+        private readonly SortedDictionary<string, string> data;      //to link the path of the pic with the its index in the listbox
+        private readonly Button StopSlidShowButton;                  //to exit slideshow mode
+        private bool IsSlideShow;                           //to know which elements to be shown  e.g rotate button  doesn't need to be shown in slideshow mod
 
-        int x, y;
-        //  int panelWidthsNormal, panelsHeightNormal, pictureBoxesWidthNormal, pictureBoxesHeightNormal;
-        Point point;
+        private int x, y;                                   //to store the width and the highet of the main panel to reset it after slideshow ends
+        private Point point;                                //to store the location of the main panel to relocate it after slideshow ends
         public Form1()
         {
-
             InitializeComponent();
-            IsSlideShow = false;
+            //set the width and the height of the form window to fit the screan
+            this.Width = Screen.PrimaryScreen.Bounds.Width;
+            this.Height = Screen.PrimaryScreen.Bounds.Height - 50;
+            this.StartPosition = FormStartPosition.CenterScreen;
+
+            //Initialization 
             panels = new List<Panel>();
-            statusStrip1.Visible = false;
             pictureBoxes = new List<PictureBox>();
             data = new SortedDictionary<string, string>();
 
-            //  thread = new Thread(UpdatePanel);
+            IsSlideShow = false;
+            statusStrip1.Visible = false;                   //to show the progress and the name of the pic during slideshow mode
+
+
+            //set StopSlidShowButton attributes
             StopSlidShowButton = new Button();
             this.Controls.Add(StopSlidShowButton);
             StopSlidShowButton.Visible = false;
@@ -47,46 +54,90 @@ namespace imageViewer
             StopSlidShowButton.Width = 30;
             StopSlidShowButton.Location = new Point(Screen.PrimaryScreen.Bounds.Width - StopSlidShowButton.Width - 15, Screen.PrimaryScreen.Bounds.Y);
             StopSlidShowButton.BringToFront();
+
+            //slideshow mode timer
             timer = new System.Windows.Forms.Timer();
             timer.Tick += Timer_Tick;
-            timer.Interval = 1000;
-            //  path.Text = Environment.SpecialFolder.MyPictures.ToString();
-            path.Text = @"C:\Users\Mahmoud Hamdy\OneDrive - Assuit University - Staff\Pictures\Saved Pictures\Backgrounds";
-            UpdatePanel();
-        }
-        private void Form1_Load1(object sender, EventArgs e)
-        {
-            this.Width = Screen.PrimaryScreen.Bounds.Width;
-            this.Height = Screen.PrimaryScreen.Bounds.Height - 50;
-            this.StartPosition = FormStartPosition.CenterScreen;
-        }
-        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            addPictureToPanel(getSelectedImages());
-        }
+            timer.Interval = 1000;          //change image every 1 sec
 
+            path.Text = initialFolderToBrowse;
+            UpdatePanel();                          //preview the images in the picture folder on startup              
+        }
+        private void ShowError(string message)
+        {
+            MessageBox.Show(message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+        private void ShowAllButton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                ShowAllButton.Enabled = false;
+                UpdatePanel();
+            }
+            catch (Exception ex)
+            {
+                ShowError(ex.Message);
+            }
+            finally
+            {
+                ShowAllButton.Enabled = true;
+            }
+        }
+        private void BrowseButton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                BrowseButton.Enabled = false;
+                OpenFileDialog openFileDialog = new OpenFileDialog();
+                openFileDialog.Filter = $"Image Files({imageExtentions})|{imageExtentions}";
+                openFileDialog.Title = "Select Images To preview";
+                openFileDialog.InitialDirectory = initialFolderToBrowse;
+                openFileDialog.Multiselect = true;
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    path.Text = Directory.GetParent(openFileDialog.FileName).ToString();
+                    //add images to the listbox
+                    listBox1.Items.Clear();
+                    listBox1.Items.AddRange(openFileDialog.SafeFileNames);
+
+                    List<string> selectedImages = new List<string>();
+                    selectedImages.AddRange(openFileDialog.FileNames);
+                    AddPictureToPanel(selectedImages);
+                }
+            }
+            catch (Exception ex)
+            {
+                ShowError(ex.Message);
+            }
+            finally
+            {
+                BrowseButton.Enabled = true;
+            }
+        }
         private void UpdatePanel()
         {
             try
             {
-                path.Text = path.Text.Trim();
-                toolStripStatusLabel2.Text = path.Text;
-                listBox1.Items.Clear();
+                path.Text = path.Text.Trim();   //remove extra spaces at starting and ending
+                toolStripStatusLabel2.Text = path.Text; //set the location in the status strip
+                listBox1.Items.Clear();                    //remove privios images
                 if (Directory.Exists(path.Text))
                 {
-                    mainPanel.Controls.Clear();
+                    mainPanel.Controls.Clear();             //remove privious images
                     List<string> images = new List<string>();
-                    string[] s = Directory.GetFiles(path.Text);
-                    for (int i = 0; i < s.Length; i++)
+
+                    string[] searchPatterns = imageExtentions.Split(';');
+                    List<string> files = new List<string>();
+                    foreach (string sp in searchPatterns)
                     {
-                        if (s[i].Contains(".jpg") || s[i].Contains(".jpeg") || s[i].Contains(".png"))
-                        {
-                            listBox1.Items.Add(s[i].Substring(s[i].LastIndexOf('\\') + 1));
-                            images.Add(s[i]);
-                        }
+                        files.AddRange(Directory.GetFiles(path.Text, sp, SearchOption.TopDirectoryOnly));
                     }
-                    // thread.Start();
-                    addPictureToPanel(images);
+                    foreach (string curFile in files)
+                    {
+                        listBox1.Items.Add(curFile.Substring(curFile.LastIndexOf('\\') + 1));
+                        images.Add(curFile);
+                    }
+                    AddPictureToPanel(images);
                 }
                 else
                 {
@@ -98,11 +149,12 @@ namespace imageViewer
                 ShowError(ex.Message);
             }
         }
-        public void ShowError(string message)
+
+        private void ListBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            MessageBox.Show(message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            AddPictureToPanel(GetSelectedImages());
         }
-        public List<string> getSelectedImages()
+        private List<string> GetSelectedImages()
         {
             List<string> images = new List<string>();
             try
@@ -123,7 +175,8 @@ namespace imageViewer
             }
             return images;
         }
-        public void addPictureToPanel(List<string> s)
+
+        private void AddPictureToPanel(List<string> s)
         {
             //    try
             //  {
@@ -142,7 +195,6 @@ namespace imageViewer
                 panels.Add(new Panel());
                 pictureBoxes.Add(new PictureBox());
 
-               // Image img = Image.FromFile(s[0]);
                 data[0 + ""] = s[0];
                 pictureBoxes[0] = new PictureBox()
                 {
@@ -163,21 +215,19 @@ namespace imageViewer
             NextButton.Visible = false;
             PreviousButton.Visible = false;
             toolStripStatusLabel2.Text = path.Text;
-            int cnt = 6;
+
+            int imageWidth = 325, imageHeight = 200;
             for (int i = 0, top = 5, left = 5; i < s.Count; i++)
             {
                 panels.Add(new Panel());
                 pictureBoxes.Add(new PictureBox());
 
-                //   Image img = Image.FromFile(s[i]);
                 data[i + ""] = s[i];
                 pictureBoxes[i] = new PictureBox()
                 {
                     Name = i + "",
-                    Width = 325,
-                    //Width = img.Width / cnt,
-                    Height = 200,
-                    //Height = img.Height / cnt,
+                    Width = imageWidth,
+                    Height = imageHeight,
                     SizeMode = PictureBoxSizeMode.Zoom,
                     Left = 2,
                     Top = 2,
@@ -185,45 +235,28 @@ namespace imageViewer
                 };
                 //  pictureBoxes[i].Image = new Bitmap(s[i]);
                 pictureBoxes[i].Load(s[i]);
-                pictureBoxes[i].MouseHover += Form1_MouseHover;
-                pictureBoxes[i].MouseLeave += Form1_MouseLeave;
-                pictureBoxes[i].MouseClick += Form1_MouseClick;
+
+                pictureBoxes[i].MouseHover += PictureBoxes_MouseHover;
+                pictureBoxes[i].MouseLeave += PictureBoxes_MouseLeave;
+                pictureBoxes[i].MouseClick += PictureBoxes_MouseClick;
 
                 panels[i] = new Panel()
                 {
-                    Width = 329,
-                    Height = 204,
-                    //    Width = (img.Width / cnt) + 4,
-                    //   Height = (img.Height / cnt) + 4,
+                    Width = imageWidth + 4,
+                    Height = imageHeight + 4,
                     Left = left,
                     Top = top
                 };
-                panels[i].Controls.Add(pictureBoxes[i]);
                 left += pictureBoxes[i].Width + 5;
                 if ((i + 1) % 4 == 0)
                 {
-                    int w = 200;
-                    //    for (int k = 0; k <= i; k++)
-                    //      w = Math.Max(w, pictureBoxes[k].Height);
-                    top += w + 5;
+                    top += imageHeight + 5;
                     left = 5;
-                    int maxHeight = 0;
-
-                    for (int k = i - 3; k <= i; k++)
-                        maxHeight = Math.Max(maxHeight, pictureBoxes[k].Height);
-
-                    for (int k = i - 3; k <= i; k++)
-                    {
-                        int borders = maxHeight - pictureBoxes[k].Height;
-                        borders /= 2;
-                        pictureBoxes[k].Top = borders;
-                        //pictureBoxes[k].botom = borders;
-                    }
                 }
 
-
-                // Add a tooltip.
                 FileInfo file_info = new FileInfo(s[i]);
+
+                //getSelectedImages the size of the file
                 var units = new[] { "B", "KB", "MB", "GB", "TB" };
                 var index = 0;
                 long size = file_info.Length;
@@ -232,8 +265,9 @@ namespace imageViewer
                     size /= 1024;
                     index++;
                 }
-                string sz = string.Format("{0} {1}", size, units[index]);
+                string sz = $"{size} {units[index]}";
 
+                // Add a tooltip.
                 ToolTip tipPicture = new ToolTip();
                 tipPicture.SetToolTip(
                     pictureBoxes[i],
@@ -243,10 +277,9 @@ namespace imageViewer
                     "\nSize: " + sz +
                     "\nCreated: " + file_info.CreationTime.ToShortDateString()
                     );
-           
+
                 pictureBoxes[i].Tag = file_info;
-
-
+                panels[i].Controls.Add(pictureBoxes[i]);
                 mainPanel.Controls.Add(panels[i]);
             }
             //}
@@ -256,7 +289,8 @@ namespace imageViewer
             }*/
         }
 
-        private void Form1_MouseLeave(object sender, EventArgs e)
+        //events on the shown images
+        private void PictureBoxes_MouseLeave(object sender, EventArgs e)
         {
             try
             {
@@ -275,7 +309,7 @@ namespace imageViewer
                 ShowError(ex.Message);
             }
         }
-        private void Form1_MouseHover(object sender, EventArgs e)
+        private void PictureBoxes_MouseHover(object sender, EventArgs e)
         {
             try
             {
@@ -295,7 +329,7 @@ namespace imageViewer
             }
 
         }
-        private void Form1_MouseClick(object sender, MouseEventArgs e)
+        private void PictureBoxes_MouseClick(object sender, MouseEventArgs e)
         {
             //try
             //{
@@ -303,13 +337,22 @@ namespace imageViewer
             List<string> images = new List<string>();
             string fullPath = data[p.Name];
             images.Add(fullPath);
-            addPictureToPanel(images);
+            AddPictureToPanel(images);
             /*}
             catch (Exception ex)
             {
                 ShowError(ex.Message);
             }*/
         }
+        private void ListBox1_MouseClick(object sender, MouseEventArgs e)
+        {
+            AddPictureToPanel(GetSelectedImages());
+        }
+        private void NextButton_Click(object sender, EventArgs e)
+        {
+            NextPicture();
+        }
+        //seperste the NextPicture because the nextbutton is hidden and can't use 'performclick'
         private void NextPicture()
         {
             //try
@@ -334,15 +377,6 @@ namespace imageViewer
                 ShowError(ex.Message);
             }*/
         }
-        private void listBox1_MouseClick(object sender, MouseEventArgs e)
-        {
-            addPictureToPanel(getSelectedImages());
-        }
-        private void exitToolStripMenuItem1_Click(object sender, EventArgs e)
-        {
-            if (MessageBox.Show("Are You Sure you want to exit..?", "Exit", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
-                Application.Exit();
-        }
         private void PreviousButton_Click(object sender, EventArgs e)
         {
             //try
@@ -361,57 +395,10 @@ namespace imageViewer
                 ShowError(ex.Message);
             }*/
         }
-        private void NextButton_Click(object sender, EventArgs e)
-        {
-            NextPicture();
 
-        }
-        private void ShowAllButton_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                ShowAllButton.Enabled = false;
-
-                //thread.Start();
-                UpdatePanel();
-            }
-            catch (Exception ex)
-            {
-                ShowError(ex.Message);
-            }
-            finally
-            {
-                ShowAllButton.Enabled = true;
-            }
-        }
-        private void BrowseButton_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                BrowseButton.Enabled = false;
-                FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
-                if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
-                {
-                    path.Text = folderBrowserDialog.SelectedPath;
-                    UpdatePanel();
-                    //    thread.Start();
-                }
-            }
-            catch (Exception ex)
-            {
-                ShowError(ex.Message);
-            }
-            finally
-            {
-                BrowseButton.Enabled = true;
-            }
-        }
         private void RotateButton_Click(object sender, EventArgs e)
         {
-            //  for (int i = 0; i < pictureBoxes.Count; i++)
-            //{
             pictureBoxes[0].Image.RotateFlip(RotateFlipType.Rotate90FlipNone);
-            //}
             this.Refresh();
         }
 
@@ -422,16 +409,42 @@ namespace imageViewer
         }
 
         //SlideShowSection
-        private void StopSlidShowButton_Click(object sender, EventArgs e)
-        {
-            StopSlidShow();
-        }
         private void SlideShowButton_Click(object sender, EventArgs e)
         {
             StartSlidShow();
 
         }
+        private void StopSlidShowButton_Click(object sender, EventArgs e)
+        {
+            StopSlidShow();
+        }
+        private void StartSlidShow()
+        {
+            IsSlideShow = true;
+            listBox1.ClearSelected();
+            listBox1.SelectedIndex = 0;
+            x = mainPanel.Width;
+            y = mainPanel.Height;
+            point = mainPanel.Location;
+            mainPanel.Dock = DockStyle.Fill;
+            mainPanel.Width = Screen.PrimaryScreen.Bounds.Width - 50;
+            this.WindowState = FormWindowState.Maximized;
 
+            statusStrip2.Visible = false;
+            listBox1.Visible = false;
+            ShowAllButton.Visible = false;
+            BrowseButton.Visible = false;
+            NextButton.Visible = false;
+            PreviousButton.Visible = false;
+            SlideShowButton.Visible = false;
+
+            statusStrip1.Visible = true;
+            StopSlidShowButton.Visible = true;
+            toolStripProgressBar1.Value = 0;
+            path.Visible = false;
+
+            timer.Start();
+        }
         private void StopSlidShow()
         {
             IsSlideShow = false;
@@ -453,34 +466,11 @@ namespace imageViewer
 
             StopSlidShowButton.Visible = false;
         }
-        private void StartSlidShow()
+
+        private void ExitToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            IsSlideShow = true;
-            listBox1.ClearSelected();
-            listBox1.SelectedIndex = 0;
-            statusStrip2.Visible = false;
-            statusStrip1.Visible = true;
-            StopSlidShowButton.Visible = false;
-            x = mainPanel.Width;
-            y = mainPanel.Height;
-            //   mainPanel.Dock = DockStyle.Fill;
-            point = mainPanel.Location;
-            mainPanel.Dock = DockStyle.Fill;
-            mainPanel.Width = Screen.PrimaryScreen.Bounds.Width - 50;
-            this.WindowState = FormWindowState.Maximized;
-            timer.Start();
-            listBox1.Visible = false;
-            ShowAllButton.Visible = false;
-            BrowseButton.Visible = false;
-            NextButton.Visible = false;
-            PreviousButton.Visible = false;
-            SlideShowButton.Visible = false;
-            StopSlidShowButton.Visible = true;
-            toolStripProgressBar1.Value = 0;
-            // progressBar1.Step = (100 + listBox1.Items.Count - 1) / listBox1.Items.Count;
-            path.Visible = false;
-
-
+            if (MessageBox.Show("Are You Sure you want to exit..?", "Exit", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                Application.Exit();
         }
     }
 }
