@@ -436,6 +436,7 @@ namespace imageViewer
             BrowseButton.Visible = false;
             NextButton.Visible = false;
             PreviousButton.Visible = false;
+            RotateButton.Visible = false;
             SlideShowButton.Visible = false;
 
             statusStrip1.Visible = true;
@@ -460,6 +461,7 @@ namespace imageViewer
             BrowseButton.Visible = true;
             NextButton.Visible = true;
             PreviousButton.Visible = true;
+            RotateButton.Visible = true;
             SlideShowButton.Visible = true;
 
             path.Visible = true;
