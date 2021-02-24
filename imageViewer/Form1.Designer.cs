@@ -71,10 +71,10 @@ namespace imageViewer
             // 
             this.path.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.path.Location = new System.Drawing.Point(175, 34);
+            this.path.Location = new System.Drawing.Point(191, 34);
             this.path.Margin = new System.Windows.Forms.Padding(2);
             this.path.Name = "path";
-            this.path.Size = new System.Drawing.Size(528, 20);
+            this.path.Size = new System.Drawing.Size(512, 20);
             this.path.TabIndex = 0;
             // 
             // mainPanel
@@ -85,10 +85,10 @@ namespace imageViewer
             this.mainPanel.AutoScroll = true;
             this.mainPanel.BackColor = System.Drawing.Color.Silver;
             this.mainPanel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.mainPanel.Location = new System.Drawing.Point(175, 63);
+            this.mainPanel.Location = new System.Drawing.Point(191, 63);
             this.mainPanel.Margin = new System.Windows.Forms.Padding(2);
             this.mainPanel.Name = "mainPanel";
-            this.mainPanel.Size = new System.Drawing.Size(693, 324);
+            this.mainPanel.Size = new System.Drawing.Size(677, 324);
             this.mainPanel.TabIndex = 1;
             // 
             // listBox1
@@ -102,7 +102,7 @@ namespace imageViewer
             this.listBox1.Margin = new System.Windows.Forms.Padding(2);
             this.listBox1.Name = "listBox1";
             this.listBox1.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.listBox1.Size = new System.Drawing.Size(170, 324);
+            this.listBox1.Size = new System.Drawing.Size(185, 324);
             this.listBox1.TabIndex = 2;
             this.listBox1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ListBox1_MouseClick);
             this.listBox1.SelectedIndexChanged += new System.EventHandler(this.ListBox1_SelectedIndexChanged);
@@ -132,8 +132,8 @@ namespace imageViewer
             // statusStrip2
             // 
             this.statusStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripStatusLabel2,
-            this.CurrentMode});
+            this.CurrentMode,
+            this.toolStripStatusLabel2});
             this.statusStrip2.Location = new System.Drawing.Point(0, 428);
             this.statusStrip2.Name = "statusStrip2";
             this.statusStrip2.Size = new System.Drawing.Size(877, 22);
@@ -148,9 +148,9 @@ namespace imageViewer
             // 
             // CurrentMode
             // 
-            this.CurrentMode.Margin = new System.Windows.Forms.Padding(800, 3, 0, 2);
+            this.CurrentMode.Margin = new System.Windows.Forms.Padding(5, 3, 20, 2);
             this.CurrentMode.Name = "CurrentMode";
-            this.CurrentMode.Size = new System.Drawing.Size(69, 15);
+            this.CurrentMode.Size = new System.Drawing.Size(69, 17);
             this.CurrentMode.Text = "Multi Mode";
             // 
             // menuStrip1
@@ -254,7 +254,7 @@ namespace imageViewer
             this.HideShowListButton.Location = new System.Drawing.Point(5, 32);
             this.HideShowListButton.Margin = new System.Windows.Forms.Padding(2);
             this.HideShowListButton.Name = "HideShowListButton";
-            this.HideShowListButton.Size = new System.Drawing.Size(79, 28);
+            this.HideShowListButton.Size = new System.Drawing.Size(99, 28);
             this.HideShowListButton.TabIndex = 12;
             this.HideShowListButton.Text = "Hide Image List";
             this.toolTip1.SetToolTip(this.HideShowListButton, "Show All image in the specified directory\r\nNote: all images in the ListBox will b" +
@@ -307,10 +307,10 @@ namespace imageViewer
             // 
             this.ShowAllButton.Image = global::imageViewer.Properties.Resources.ShowAll;
             this.ShowAllButton.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.ShowAllButton.Location = new System.Drawing.Point(88, 31);
+            this.ShowAllButton.Location = new System.Drawing.Point(108, 31);
             this.ShowAllButton.Margin = new System.Windows.Forms.Padding(2);
             this.ShowAllButton.Name = "ShowAllButton";
-            this.ShowAllButton.Size = new System.Drawing.Size(85, 28);
+            this.ShowAllButton.Size = new System.Drawing.Size(76, 28);
             this.ShowAllButton.TabIndex = 3;
             this.ShowAllButton.Text = "Show All";
             this.ShowAllButton.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -351,9 +351,9 @@ namespace imageViewer
             // 
             // IsDarkModeEnable
             // 
-            this.IsDarkModeEnable.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.IsDarkModeEnable.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.IsDarkModeEnable.AutoSize = true;
-            this.IsDarkModeEnable.Location = new System.Drawing.Point(798, 0);
+            this.IsDarkModeEnable.Location = new System.Drawing.Point(12, 401);
             this.IsDarkModeEnable.Name = "IsDarkModeEnable";
             this.IsDarkModeEnable.Size = new System.Drawing.Size(79, 17);
             this.IsDarkModeEnable.TabIndex = 13;
@@ -382,7 +382,7 @@ namespace imageViewer
             this.Controls.Add(this.ShowAllButton);
             this.Controls.Add(this.listBox1);
             this.Controls.Add(this.mainPanel);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
             this.Margin = new System.Windows.Forms.Padding(2);
@@ -390,6 +390,7 @@ namespace imageViewer
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "Image Viewer";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
+            this.Load += new System.EventHandler(this.Form1_Load);
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
             this.statusStrip2.ResumeLayout(false);

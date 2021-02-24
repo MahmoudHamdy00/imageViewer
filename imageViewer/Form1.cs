@@ -25,31 +25,34 @@ namespace imageViewer
         private readonly Button StopSlidShowButton;                  //to exit slideshow mode
         private bool IsSlideShow;                           //to know which elements to be shown  e.g rotate button  doesn't need to be shown in slideshow mod
 
-        private readonly int x, y;
         private readonly Point point;                                //to store the location of the main panel to relocate it after slideshow ends
 
         public Form1()
         {
             InitializeComponent();
+            panels = new List<Panel>();
+            pictureBoxes = new List<PictureBox>();
+            data = new SortedDictionary<string, string>();
+            point = mainPanel.Location;
+            StopSlidShowButton = new Button();
+            timer = new System.Windows.Forms.Timer();
+        }
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            NavigationButtonsLocations();
             //set the width and the height of the form window to fit the screan
             this.Width = Screen.PrimaryScreen.Bounds.Width;
             this.Height = Screen.PrimaryScreen.Bounds.Height - 50;
             this.StartPosition = FormStartPosition.CenterScreen;
 
             //Initialization 
-            panels = new List<Panel>();
-            pictureBoxes = new List<PictureBox>();
-            data = new SortedDictionary<string, string>();
-            x = mainPanel.Width;
-            y = mainPanel.Height;
-            point = mainPanel.Location;
+
 
             IsSlideShow = false;
             statusStrip1.Visible = false;                   //to show the progress and the name of the pic during slideshow mode
 
 
             //set StopSlidShowButton attributes
-            StopSlidShowButton = new Button();
             this.Controls.Add(StopSlidShowButton);
             StopSlidShowButton.Visible = false;
             StopSlidShowButton.Text = "x";
@@ -58,14 +61,14 @@ namespace imageViewer
             StopSlidShowButton.Width = 30;
             StopSlidShowButton.Location = new Point(Screen.PrimaryScreen.Bounds.Width - StopSlidShowButton.Width - 15, Screen.PrimaryScreen.Bounds.Y);
             StopSlidShowButton.BringToFront();
-
             //slideshow mode timer
-            timer = new System.Windows.Forms.Timer();
             timer.Tick += Timer_Tick;
             timer.Interval = 1000;          //change image every 1 sec
 
             path.Text = initialFolderToBrowse;
             UpdatePanel();                          //preview the images in the picture folder on startup              
+
+
         }
         private void ShowError(string message)
         {
@@ -221,7 +224,7 @@ namespace imageViewer
             PreviousButton.Visible = false;
             toolStripStatusLabel2.Text = path.Text;
             mainPanel.BackColor = IsDarkModeEnable.Checked ? Color.Black : Color.Silver;
-            int imageWidth = 325, imageHeight = 200;
+            int imageWidth = mainPanel.Width / 4 - 10, imageHeight = imageWidth * 3 / 4;
             for (int i = 0, top = 5, left = 5; i < s.Count; i++)
             {
                 panels.Add(new Panel());
@@ -463,9 +466,7 @@ namespace imageViewer
             statusStrip2.Visible = true;
             statusStrip1.Visible = false;
             mainPanel.Dock = DockStyle.None;
-            mainPanel.Width = x;
-            mainPanel.Height = y;
-            mainPanel.Location = point;
+            HideShowListButton_Click(this, new EventArgs());
             listBox1.Visible = true;
             ShowAllButton.Visible = true;
             HideShowListButton.Visible = true;
@@ -482,6 +483,7 @@ namespace imageViewer
 
         private void SingleMode_Click(object sender, EventArgs e)
         {
+            ShowAllButton.Enabled = false;
             listBox1.SelectionMode = SelectionMode.One;
             if (listBox1.SelectedIndex == -1)
                 listBox1.SelectedIndex = 0;
@@ -491,6 +493,7 @@ namespace imageViewer
 
         private void MultiMode_Click(object sender, EventArgs e)
         {
+            ShowAllButton.Enabled = true;
             listBox1.SelectionMode = SelectionMode.MultiExtended;
             CurrentMode.Text = "Multi Mode";
         }
@@ -501,36 +504,40 @@ namespace imageViewer
             if (listBox1.Visible)
             {
                 HideShowListButton.Text = "Hide Image List";
-                mainPanel.Width = x;
-                mainPanel.Height = y;
+                mainPanel.Width = this.Width - listBox1.Width - 50;
+                mainPanel.Height = this.Height - 200;
                 mainPanel.Location = point;
-                int width = this.Width + listBox1.Width - NextButton.Width - PreviousButton.Width - RotateButton.Width;
-                width >>= 1;
-                PreviousButton.Location = new Point(width, PreviousButton.Location.Y);
-                width += PreviousButton.Width + 5;
-                RotateButton.Location = new Point(width, PreviousButton.Location.Y);
-                width += RotateButton.Width + 5;
-                NextButton.Location = new Point(width, PreviousButton.Location.Y);
+                mainPanel.Location = new Point(path.Location.X, path.Location.Y + path.Height + 10);
+
             }
             else
             {
                 HideShowListButton.Text = "Show Image List";
                 mainPanel.Location = new Point(HideShowListButton.Location.X, HideShowListButton.Location.Y + HideShowListButton.Height + 10);
-                mainPanel.Width = Screen.PrimaryScreen.Bounds.Width - 10;
+                mainPanel.Width = this.Width - 30;
+                mainPanel.Height = this.Height - 200;
 
-                int width = this.Width - NextButton.Width - PreviousButton.Width - RotateButton.Width;
-                width >>= 1;
-                PreviousButton.Location = new Point(width, PreviousButton.Location.Y);
-                width += PreviousButton.Width + 5;
-                RotateButton.Location = new Point(width, PreviousButton.Location.Y);
-                width += RotateButton.Width + 5;
-                NextButton.Location = new Point(width, PreviousButton.Location.Y);
             }
+            ReloadContent();
+            NavigationButtonsLocations();
         }
-
+        private void NavigationButtonsLocations()
+        {
+            int width = this.Width - NextButton.Width - PreviousButton.Width - RotateButton.Width;
+            if (listBox1.Visible)
+            {
+                width += listBox1.Width;
+            }
+            width >>= 1;
+            PreviousButton.Location = new Point(width, PreviousButton.Location.Y);
+            width += PreviousButton.Width + 5;
+            RotateButton.Location = new Point(width, PreviousButton.Location.Y);
+            width += RotateButton.Width + 5;
+            NextButton.Location = new Point(width, PreviousButton.Location.Y);
+        }
         private void apoutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            InfoForm infoForm = new InfoForm();
+            InfoForm infoForm = new InfoForm(IsDarkModeEnable.Checked);
             infoForm.Visible = true;
             return;
         }
@@ -542,6 +549,8 @@ namespace imageViewer
                 Application.Exit();
         }
 
+
+
         private void IsDarkModeEnable_CheckedChanged(object sender, EventArgs e)
         {
             if (IsDarkModeEnable.Checked)
@@ -550,29 +559,30 @@ namespace imageViewer
                 statusStrip1.BackColor = Color.Black;
                 statusStrip2.BackColor = Color.Black;
                 listBox1.BackColor = Color.Black;
-                NextButton.BackColor = Color.Black;
-                PreviousButton.BackColor = Color.Black;
-                RotateButton.BackColor = Color.Black;
-                BrowseButton.BackColor = Color.Black;
-                SlideShowButton.BackColor = Color.Black;
-                ShowAllButton.BackColor = Color.Black;
-                HideShowListButton.BackColor = Color.Black;
+                path.BackColor = Color.Black;
                 mainPanel.BackColor = Color.Black;
                 menuStrip1.BackColor = Color.Black;
+                ShowAllButton.BackColor = Color.DarkGray;
+                BrowseButton.BackColor = Color.DarkGray;
+                SlideShowButton.BackColor = Color.DarkGray;
+                HideShowListButton.BackColor = Color.DarkGray;
+                NextButton.BackColor = Color.DarkGray;
+                PreviousButton.BackColor = Color.DarkGray;
+                RotateButton.BackColor = Color.DarkGray;
+
 
                 this.ForeColor = Color.White;
                 statusStrip1.ForeColor = Color.White;
                 statusStrip2.ForeColor = Color.White;
                 listBox1.ForeColor = Color.White;
-                NextButton.ForeColor = Color.White;
-                PreviousButton.ForeColor = Color.White;
-                RotateButton.ForeColor = Color.White;
-                BrowseButton.ForeColor = Color.White;
-                SlideShowButton.ForeColor = Color.White;
-                ShowAllButton.ForeColor = Color.White;
-                HideShowListButton.ForeColor = Color.White;
+                path.ForeColor = Color.White;
                 mainPanel.ForeColor = Color.DarkGray;
                 menuStrip1.ForeColor = Color.White;
+                ShowAllButton.ForeColor = Color.Black;
+                BrowseButton.ForeColor = Color.Black;
+                SlideShowButton.ForeColor = Color.Black;
+                HideShowListButton.ForeColor = Color.Black;
+
 
 
             }
@@ -582,35 +592,41 @@ namespace imageViewer
                 statusStrip1.BackColor = Color.White;
                 statusStrip2.BackColor = Color.White;
                 listBox1.BackColor = Color.White;
-                NextButton.BackColor = Color.White;
-                PreviousButton.BackColor = Color.White;
-                RotateButton.BackColor = Color.White;
-                BrowseButton.BackColor = Color.White;
-                SlideShowButton.BackColor = Color.White;
-                ShowAllButton.BackColor = Color.White;
-                HideShowListButton.BackColor = Color.White;
+                path.BackColor = Color.White;
                 mainPanel.BackColor = Color.Silver;
                 menuStrip1.BackColor = Color.White;
+                ShowAllButton.BackColor = Color.Gainsboro;
+                BrowseButton.BackColor = Color.Gainsboro;
+                SlideShowButton.BackColor = Color.Gainsboro;
+                HideShowListButton.BackColor = Color.Gainsboro;
+                NextButton.BackColor = Color.Gainsboro;
+                PreviousButton.BackColor = Color.Gainsboro;
+                RotateButton.BackColor = Color.Gainsboro;
 
                 this.ForeColor = Color.Black;
                 statusStrip1.ForeColor = Color.Black;
                 statusStrip2.ForeColor = Color.Black;
                 listBox1.ForeColor = Color.Black;
-                NextButton.ForeColor = Color.Black;
-                PreviousButton.ForeColor = Color.Black;
-                RotateButton.ForeColor = Color.Black;
-                BrowseButton.ForeColor = Color.Black;
-                SlideShowButton.ForeColor = Color.Black;
-                ShowAllButton.ForeColor = Color.Black;
-                HideShowListButton.ForeColor = Color.Black;
+                path.ForeColor = Color.Black;
                 mainPanel.ForeColor = Color.DarkGray;
                 menuStrip1.ForeColor = Color.Black;
-
             }
+
+            ReloadContent();
         }
-
-
-
-
+        private void ReloadContent()
+        {
+            if (listBox1.SelectedItems.Count == 0)
+            {
+                List<string> tmp = new List<string>();
+                foreach (string item in listBox1.Items)
+                {
+                    tmp.Add(Path.Combine(path.Text, item));
+                }
+                AddPictureToPanel(tmp);
+                return;
+            }
+            ListBox1_SelectedIndexChanged(this, new EventArgs());
+        }
     }
 }
