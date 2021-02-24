@@ -27,6 +27,7 @@ namespace imageViewer
 
         private readonly int x, y;
         private readonly Point point;                                //to store the location of the main panel to relocate it after slideshow ends
+
         public Form1()
         {
             InitializeComponent();
@@ -42,7 +43,6 @@ namespace imageViewer
             x = mainPanel.Width;
             y = mainPanel.Height;
             point = mainPanel.Location;
-
 
             IsSlideShow = false;
             statusStrip1.Visible = false;                   //to show the progress and the name of the pic during slideshow mode
@@ -204,7 +204,7 @@ namespace imageViewer
                 {
                     Name = 0 + "",
                     SizeMode = PictureBoxSizeMode.Zoom,
-                    BackColor = Color.LightGray
+                    BackColor = IsDarkModeEnable.Checked ? Color.Black : Color.LightGray
                 };
                 pictureBoxes[0].Load(s[0]);
 
@@ -220,7 +220,7 @@ namespace imageViewer
             NextButton.Visible = false;
             PreviousButton.Visible = false;
             toolStripStatusLabel2.Text = path.Text;
-            mainPanel.BackColor = Color.Silver;
+            mainPanel.BackColor = IsDarkModeEnable.Checked ? Color.Black : Color.Silver;
             int imageWidth = 325, imageHeight = 200;
             for (int i = 0, top = 5, left = 5; i < s.Count; i++)
             {
@@ -236,7 +236,8 @@ namespace imageViewer
                     SizeMode = PictureBoxSizeMode.Zoom,
                     Left = 2,
                     Top = 2,
-                    BackColor = mainPanel.BackColor,
+                    BackColor = IsDarkModeEnable.Checked ? Color.Black
+                    : mainPanel.BackColor,
                 };
                 //  pictureBoxes[i].Image = new Bitmap(s[i]);
                 pictureBoxes[i].Load(s[i]);
@@ -250,7 +251,9 @@ namespace imageViewer
                     Width = imageWidth + 4,
                     Height = imageHeight + 4,
                     Left = left,
-                    Top = top
+                    Top = top,
+                    BackColor = IsDarkModeEnable.Checked ? Color.Black : mainPanel.BackColor,
+
                 };
                 left += pictureBoxes[i].Width + 5;
                 if ((i + 1) % 4 == 0)
@@ -258,7 +261,6 @@ namespace imageViewer
                     top += imageHeight + 5;
                     left = 5;
                 }
-
                 FileInfo file_info = new FileInfo(s[i]);
 
                 //getSelectedImages the size of the file
@@ -304,6 +306,7 @@ namespace imageViewer
                 if (idx >= panels.Count)
                     return;
                 panels[idx].BackColor = mainPanel.BackColor;
+
                 /*   panels[idx].Width = panelWidthsNormal;
                    panels[idx].Height = panelsHeightNormal;
                    pictureBoxes[idx].Width = pictureBoxesWidthNormal;
@@ -322,7 +325,7 @@ namespace imageViewer
                 int idx = Convert.ToInt32(p.Name);
                 if (idx >= panels.Count)
                     return;
-                panels[idx].BackColor = Color.Black;
+                panels[idx].BackColor = IsDarkModeEnable.Checked ? Color.White : Color.Black;
                 /*   panels[idx].Width = panelWidthsNormal+10;
                    panels[idx].Height = panelsHeightNormal+10;
                    pictureBoxes[idx].Width = pictureBoxesWidthNormal+10;
@@ -538,5 +541,76 @@ namespace imageViewer
             if (MessageBox.Show("Are You Sure you want to exit..?", "Exit", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                 Application.Exit();
         }
+
+        private void IsDarkModeEnable_CheckedChanged(object sender, EventArgs e)
+        {
+            if (IsDarkModeEnable.Checked)
+            {
+                this.BackColor = Color.Black;
+                statusStrip1.BackColor = Color.Black;
+                statusStrip2.BackColor = Color.Black;
+                listBox1.BackColor = Color.Black;
+                NextButton.BackColor = Color.Black;
+                PreviousButton.BackColor = Color.Black;
+                RotateButton.BackColor = Color.Black;
+                BrowseButton.BackColor = Color.Black;
+                SlideShowButton.BackColor = Color.Black;
+                ShowAllButton.BackColor = Color.Black;
+                HideShowListButton.BackColor = Color.Black;
+                mainPanel.BackColor = Color.Black;
+                menuStrip1.BackColor = Color.Black;
+
+                this.ForeColor = Color.White;
+                statusStrip1.ForeColor = Color.White;
+                statusStrip2.ForeColor = Color.White;
+                listBox1.ForeColor = Color.White;
+                NextButton.ForeColor = Color.White;
+                PreviousButton.ForeColor = Color.White;
+                RotateButton.ForeColor = Color.White;
+                BrowseButton.ForeColor = Color.White;
+                SlideShowButton.ForeColor = Color.White;
+                ShowAllButton.ForeColor = Color.White;
+                HideShowListButton.ForeColor = Color.White;
+                mainPanel.ForeColor = Color.DarkGray;
+                menuStrip1.ForeColor = Color.White;
+
+
+            }
+            else
+            {
+                this.BackColor = Color.Gainsboro;
+                statusStrip1.BackColor = Color.White;
+                statusStrip2.BackColor = Color.White;
+                listBox1.BackColor = Color.White;
+                NextButton.BackColor = Color.White;
+                PreviousButton.BackColor = Color.White;
+                RotateButton.BackColor = Color.White;
+                BrowseButton.BackColor = Color.White;
+                SlideShowButton.BackColor = Color.White;
+                ShowAllButton.BackColor = Color.White;
+                HideShowListButton.BackColor = Color.White;
+                mainPanel.BackColor = Color.Silver;
+                menuStrip1.BackColor = Color.White;
+
+                this.ForeColor = Color.Black;
+                statusStrip1.ForeColor = Color.Black;
+                statusStrip2.ForeColor = Color.Black;
+                listBox1.ForeColor = Color.Black;
+                NextButton.ForeColor = Color.Black;
+                PreviousButton.ForeColor = Color.Black;
+                RotateButton.ForeColor = Color.Black;
+                BrowseButton.ForeColor = Color.Black;
+                SlideShowButton.ForeColor = Color.Black;
+                ShowAllButton.ForeColor = Color.Black;
+                HideShowListButton.ForeColor = Color.Black;
+                mainPanel.ForeColor = Color.DarkGray;
+                menuStrip1.ForeColor = Color.Black;
+
+            }
+        }
+
+
+
+
     }
 }

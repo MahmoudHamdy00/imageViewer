@@ -42,8 +42,8 @@ namespace imageViewer
             this.CurrentMode = new System.Windows.Forms.ToolStripStatusLabel();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.exitToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.apoutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.exitToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.modesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.singleModeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.multiModeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -60,6 +60,7 @@ namespace imageViewer
             this.ShowAllButton = new System.Windows.Forms.Button();
             this.BrowseButton = new System.Windows.Forms.Button();
             this.SlideShowButton = new System.Windows.Forms.Button();
+            this.IsDarkModeEnable = new System.Windows.Forms.CheckBox();
             this.statusStrip1.SuspendLayout();
             this.statusStrip2.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -172,19 +173,19 @@ namespace imageViewer
             this.exitToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.exitToolStripMenuItem.Text = "File";
             // 
-            // exitToolStripMenuItem1
-            // 
-            this.exitToolStripMenuItem1.Name = "exitToolStripMenuItem1";
-            this.exitToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
-            this.exitToolStripMenuItem1.Text = "Exit";
-            this.exitToolStripMenuItem1.Click += new System.EventHandler(this.ExitToolStripMenuItem1_Click);
-            // 
             // apoutToolStripMenuItem
             // 
             this.apoutToolStripMenuItem.Name = "apoutToolStripMenuItem";
-            this.apoutToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.apoutToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
             this.apoutToolStripMenuItem.Text = "About";
             this.apoutToolStripMenuItem.Click += new System.EventHandler(this.apoutToolStripMenuItem_Click);
+            // 
+            // exitToolStripMenuItem1
+            // 
+            this.exitToolStripMenuItem1.Name = "exitToolStripMenuItem1";
+            this.exitToolStripMenuItem1.Size = new System.Drawing.Size(107, 22);
+            this.exitToolStripMenuItem1.Text = "Exit";
+            this.exitToolStripMenuItem1.Click += new System.EventHandler(this.ExitToolStripMenuItem1_Click);
             // 
             // modesToolStripMenuItem
             // 
@@ -348,6 +349,18 @@ namespace imageViewer
             this.SlideShowButton.UseVisualStyleBackColor = true;
             this.SlideShowButton.Click += new System.EventHandler(this.SlideShowButton_Click);
             // 
+            // IsDarkModeEnable
+            // 
+            this.IsDarkModeEnable.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.IsDarkModeEnable.AutoSize = true;
+            this.IsDarkModeEnable.Location = new System.Drawing.Point(798, 0);
+            this.IsDarkModeEnable.Name = "IsDarkModeEnable";
+            this.IsDarkModeEnable.Size = new System.Drawing.Size(79, 17);
+            this.IsDarkModeEnable.TabIndex = 13;
+            this.IsDarkModeEnable.Text = "Dark Mode";
+            this.IsDarkModeEnable.UseVisualStyleBackColor = true;
+            this.IsDarkModeEnable.CheckedChanged += new System.EventHandler(this.IsDarkModeEnable_CheckedChanged);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -355,6 +368,7 @@ namespace imageViewer
             this.BackColor = System.Drawing.Color.Gainsboro;
             this.ClientSize = new System.Drawing.Size(877, 472);
             this.ContextMenuStrip = this.contextMenuStrip1;
+            this.Controls.Add(this.IsDarkModeEnable);
             this.Controls.Add(this.NextButton);
             this.Controls.Add(this.RotateButton);
             this.Controls.Add(this.HideShowListButton);
@@ -368,6 +382,7 @@ namespace imageViewer
             this.Controls.Add(this.ShowAllButton);
             this.Controls.Add(this.listBox1);
             this.Controls.Add(this.mainPanel);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
             this.Margin = new System.Windows.Forms.Padding(2);
@@ -418,6 +433,7 @@ namespace imageViewer
         private System.Windows.Forms.Button RotateButton;
         private System.Windows.Forms.Button NextButton;
         private System.Windows.Forms.ToolStripMenuItem apoutToolStripMenuItem;
+        private System.Windows.Forms.CheckBox IsDarkModeEnable;
     }
 }
 
