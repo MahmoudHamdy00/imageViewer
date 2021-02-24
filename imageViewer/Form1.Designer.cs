@@ -39,9 +39,11 @@ namespace imageViewer
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.statusStrip2 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.CurrentMode = new System.Windows.Forms.ToolStripStatusLabel();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.apoutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.modesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.singleModeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.multiModeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -52,14 +54,12 @@ namespace imageViewer
             this.SlideShowMode_ContextMenuStrip = new System.Windows.Forms.ToolStripMenuItem();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.HideShowListButton = new System.Windows.Forms.Button();
-            this.CurrentMode = new System.Windows.Forms.ToolStripStatusLabel();
-            this.apoutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.NextButton = new System.Windows.Forms.Button();
             this.RotateButton = new System.Windows.Forms.Button();
             this.PreviousButton = new System.Windows.Forms.Button();
+            this.ShowAllButton = new System.Windows.Forms.Button();
             this.BrowseButton = new System.Windows.Forms.Button();
             this.SlideShowButton = new System.Windows.Forms.Button();
-            this.ShowAllButton = new System.Windows.Forms.Button();
             this.statusStrip1.SuspendLayout();
             this.statusStrip2.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -145,6 +145,13 @@ namespace imageViewer
             this.toolStripStatusLabel2.Size = new System.Drawing.Size(118, 17);
             this.toolStripStatusLabel2.Text = "toolStripStatusLabel2";
             // 
+            // CurrentMode
+            // 
+            this.CurrentMode.Margin = new System.Windows.Forms.Padding(800, 3, 0, 2);
+            this.CurrentMode.Name = "CurrentMode";
+            this.CurrentMode.Size = new System.Drawing.Size(69, 15);
+            this.CurrentMode.Text = "Multi Mode";
+            // 
             // menuStrip1
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -159,8 +166,8 @@ namespace imageViewer
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.exitToolStripMenuItem1,
-            this.apoutToolStripMenuItem});
+            this.apoutToolStripMenuItem,
+            this.exitToolStripMenuItem1});
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
             this.exitToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.exitToolStripMenuItem.Text = "File";
@@ -168,9 +175,16 @@ namespace imageViewer
             // exitToolStripMenuItem1
             // 
             this.exitToolStripMenuItem1.Name = "exitToolStripMenuItem1";
-            this.exitToolStripMenuItem1.Size = new System.Drawing.Size(107, 22);
+            this.exitToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
             this.exitToolStripMenuItem1.Text = "Exit";
             this.exitToolStripMenuItem1.Click += new System.EventHandler(this.ExitToolStripMenuItem1_Click);
+            // 
+            // apoutToolStripMenuItem
+            // 
+            this.apoutToolStripMenuItem.Name = "apoutToolStripMenuItem";
+            this.apoutToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.apoutToolStripMenuItem.Text = "About";
+            this.apoutToolStripMenuItem.Click += new System.EventHandler(this.apoutToolStripMenuItem_Click);
             // 
             // modesToolStripMenuItem
             // 
@@ -247,20 +261,6 @@ namespace imageViewer
             this.HideShowListButton.UseVisualStyleBackColor = true;
             this.HideShowListButton.Click += new System.EventHandler(this.HideShowListButton_Click);
             // 
-            // CurrentMode
-            // 
-            this.CurrentMode.Margin = new System.Windows.Forms.Padding(800, 3, 0, 2);
-            this.CurrentMode.Name = "CurrentMode";
-            this.CurrentMode.Size = new System.Drawing.Size(69, 17);
-            this.CurrentMode.Text = "Multi Mode";
-            // 
-            // apoutToolStripMenuItem
-            // 
-            this.apoutToolStripMenuItem.Name = "apoutToolStripMenuItem";
-            this.apoutToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
-            this.apoutToolStripMenuItem.Text = "About";
-            this.apoutToolStripMenuItem.Click += new System.EventHandler(this.apoutToolStripMenuItem_Click);
-            // 
             // NextButton
             // 
             this.NextButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
@@ -302,6 +302,22 @@ namespace imageViewer
             this.PreviousButton.UseVisualStyleBackColor = true;
             this.PreviousButton.Click += new System.EventHandler(this.PreviousButton_Click);
             // 
+            // ShowAllButton
+            // 
+            this.ShowAllButton.Image = global::imageViewer.Properties.Resources.ShowAll;
+            this.ShowAllButton.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.ShowAllButton.Location = new System.Drawing.Point(88, 31);
+            this.ShowAllButton.Margin = new System.Windows.Forms.Padding(2);
+            this.ShowAllButton.Name = "ShowAllButton";
+            this.ShowAllButton.Size = new System.Drawing.Size(85, 28);
+            this.ShowAllButton.TabIndex = 3;
+            this.ShowAllButton.Text = "Show All";
+            this.ShowAllButton.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.toolTip1.SetToolTip(this.ShowAllButton, "Show All image in the specified directory\r\nNote: all images in the ListBox will b" +
+        "e removed");
+            this.ShowAllButton.UseVisualStyleBackColor = true;
+            this.ShowAllButton.Click += new System.EventHandler(this.ShowAllButton_Click);
+            // 
             // BrowseButton
             // 
             this.BrowseButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -331,22 +347,6 @@ namespace imageViewer
             this.SlideShowButton.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.SlideShowButton.UseVisualStyleBackColor = true;
             this.SlideShowButton.Click += new System.EventHandler(this.SlideShowButton_Click);
-            // 
-            // ShowAllButton
-            // 
-            this.ShowAllButton.Image = global::imageViewer.Properties.Resources.ShowAll;
-            this.ShowAllButton.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.ShowAllButton.Location = new System.Drawing.Point(88, 31);
-            this.ShowAllButton.Margin = new System.Windows.Forms.Padding(2);
-            this.ShowAllButton.Name = "ShowAllButton";
-            this.ShowAllButton.Size = new System.Drawing.Size(85, 28);
-            this.ShowAllButton.TabIndex = 3;
-            this.ShowAllButton.Text = "Show All";
-            this.ShowAllButton.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.toolTip1.SetToolTip(this.ShowAllButton, "Show All image in the specified directory\r\nNote: all images in the ListBox will b" +
-        "e removed");
-            this.ShowAllButton.UseVisualStyleBackColor = true;
-            this.ShowAllButton.Click += new System.EventHandler(this.ShowAllButton_Click);
             // 
             // Form1
             // 
