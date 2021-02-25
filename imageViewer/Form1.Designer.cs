@@ -38,8 +38,8 @@ namespace imageViewer
             this.toolStripProgressBar1 = new System.Windows.Forms.ToolStripProgressBar();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.statusStrip2 = new System.Windows.Forms.StatusStrip();
-            this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
             this.CurrentMode = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.apoutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -58,13 +58,17 @@ namespace imageViewer
             this.RotateButton = new System.Windows.Forms.Button();
             this.PreviousButton = new System.Windows.Forms.Button();
             this.ShowAllButton = new System.Windows.Forms.Button();
+            this.numOfSeconds = new System.Windows.Forms.NumericUpDown();
+            this.LoopSlideShow = new System.Windows.Forms.CheckBox();
             this.BrowseButton = new System.Windows.Forms.Button();
             this.SlideShowButton = new System.Windows.Forms.Button();
             this.IsDarkModeEnable = new System.Windows.Forms.CheckBox();
+            this.secSlideShowLabel = new System.Windows.Forms.Label();
             this.statusStrip1.SuspendLayout();
             this.statusStrip2.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numOfSeconds)).BeginInit();
             this.SuspendLayout();
             // 
             // path
@@ -88,7 +92,7 @@ namespace imageViewer
             this.mainPanel.Location = new System.Drawing.Point(191, 63);
             this.mainPanel.Margin = new System.Windows.Forms.Padding(2);
             this.mainPanel.Name = "mainPanel";
-            this.mainPanel.Size = new System.Drawing.Size(677, 324);
+            this.mainPanel.Size = new System.Drawing.Size(677, 347);
             this.mainPanel.TabIndex = 1;
             // 
             // listBox1
@@ -102,7 +106,7 @@ namespace imageViewer
             this.listBox1.Margin = new System.Windows.Forms.Padding(2);
             this.listBox1.Name = "listBox1";
             this.listBox1.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.listBox1.Size = new System.Drawing.Size(185, 324);
+            this.listBox1.Size = new System.Drawing.Size(185, 340);
             this.listBox1.TabIndex = 2;
             this.listBox1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ListBox1_MouseClick);
             this.listBox1.SelectedIndexChanged += new System.EventHandler(this.ListBox1_SelectedIndexChanged);
@@ -140,18 +144,18 @@ namespace imageViewer
             this.statusStrip2.TabIndex = 9;
             this.statusStrip2.Text = "statusStrip2";
             // 
-            // toolStripStatusLabel2
-            // 
-            this.toolStripStatusLabel2.Name = "toolStripStatusLabel2";
-            this.toolStripStatusLabel2.Size = new System.Drawing.Size(118, 17);
-            this.toolStripStatusLabel2.Text = "toolStripStatusLabel2";
-            // 
             // CurrentMode
             // 
             this.CurrentMode.Margin = new System.Windows.Forms.Padding(5, 3, 20, 2);
             this.CurrentMode.Name = "CurrentMode";
             this.CurrentMode.Size = new System.Drawing.Size(69, 17);
             this.CurrentMode.Text = "Multi Mode";
+            // 
+            // toolStripStatusLabel2
+            // 
+            this.toolStripStatusLabel2.Name = "toolStripStatusLabel2";
+            this.toolStripStatusLabel2.Size = new System.Drawing.Size(118, 17);
+            this.toolStripStatusLabel2.Text = "toolStripStatusLabel2";
             // 
             // menuStrip1
             // 
@@ -266,7 +270,7 @@ namespace imageViewer
             // 
             this.NextButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.NextButton.Image = ((System.Drawing.Image)(resources.GetObject("NextButton.Image")));
-            this.NextButton.Location = new System.Drawing.Point(487, 391);
+            this.NextButton.Location = new System.Drawing.Point(487, 414);
             this.NextButton.Margin = new System.Windows.Forms.Padding(2);
             this.NextButton.Name = "NextButton";
             this.NextButton.Size = new System.Drawing.Size(58, 34);
@@ -281,7 +285,7 @@ namespace imageViewer
             // 
             this.RotateButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.RotateButton.Image = ((System.Drawing.Image)(resources.GetObject("RotateButton.Image")));
-            this.RotateButton.Location = new System.Drawing.Point(432, 392);
+            this.RotateButton.Location = new System.Drawing.Point(432, 414);
             this.RotateButton.Margin = new System.Windows.Forms.Padding(2);
             this.RotateButton.Name = "RotateButton";
             this.RotateButton.Size = new System.Drawing.Size(51, 34);
@@ -294,7 +298,7 @@ namespace imageViewer
             // 
             this.PreviousButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.PreviousButton.Image = ((System.Drawing.Image)(resources.GetObject("PreviousButton.Image")));
-            this.PreviousButton.Location = new System.Drawing.Point(370, 391);
+            this.PreviousButton.Location = new System.Drawing.Point(370, 414);
             this.PreviousButton.Margin = new System.Windows.Forms.Padding(2);
             this.PreviousButton.Name = "PreviousButton";
             this.PreviousButton.Size = new System.Drawing.Size(58, 34);
@@ -318,6 +322,50 @@ namespace imageViewer
         "e removed");
             this.ShowAllButton.UseVisualStyleBackColor = true;
             this.ShowAllButton.Click += new System.EventHandler(this.ShowAllButton_Click);
+            // 
+            // numOfSeconds
+            // 
+            this.numOfSeconds.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.numOfSeconds.Increment = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            this.numOfSeconds.Location = new System.Drawing.Point(624, 454);
+            this.numOfSeconds.Maximum = new decimal(new int[] {
+            1410065408,
+            2,
+            0,
+            0});
+            this.numOfSeconds.Minimum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            this.numOfSeconds.Name = "numOfSeconds";
+            this.numOfSeconds.Size = new System.Drawing.Size(57, 20);
+            this.numOfSeconds.TabIndex = 14;
+            this.toolTip1.SetToolTip(this.numOfSeconds, "The number of seconds each image will be displayed");
+            this.numOfSeconds.Value = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.numOfSeconds.Visible = false;
+            this.numOfSeconds.ValueChanged += new System.EventHandler(this.numOfSeconds_ValueChanged);
+            // 
+            // LoopSlideShow
+            // 
+            this.LoopSlideShow.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.LoopSlideShow.AutoSize = true;
+            this.LoopSlideShow.Location = new System.Drawing.Point(733, 455);
+            this.LoopSlideShow.Name = "LoopSlideShow";
+            this.LoopSlideShow.Size = new System.Drawing.Size(50, 17);
+            this.LoopSlideShow.TabIndex = 16;
+            this.LoopSlideShow.Text = "Loop";
+            this.toolTip1.SetToolTip(this.LoopSlideShow, "Looping Slideshow \"after images reach end ,start from the begining\"");
+            this.LoopSlideShow.UseVisualStyleBackColor = true;
+            this.LoopSlideShow.Visible = false;
             // 
             // BrowseButton
             // 
@@ -351,15 +399,26 @@ namespace imageViewer
             // 
             // IsDarkModeEnable
             // 
-            this.IsDarkModeEnable.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.IsDarkModeEnable.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.IsDarkModeEnable.AutoSize = true;
-            this.IsDarkModeEnable.Location = new System.Drawing.Point(12, 401);
+            this.IsDarkModeEnable.Location = new System.Drawing.Point(789, 455);
             this.IsDarkModeEnable.Name = "IsDarkModeEnable";
             this.IsDarkModeEnable.Size = new System.Drawing.Size(79, 17);
             this.IsDarkModeEnable.TabIndex = 13;
             this.IsDarkModeEnable.Text = "Dark Mode";
             this.IsDarkModeEnable.UseVisualStyleBackColor = true;
             this.IsDarkModeEnable.CheckedChanged += new System.EventHandler(this.IsDarkModeEnable_CheckedChanged);
+            // 
+            // secSlideShowLabel
+            // 
+            this.secSlideShowLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.secSlideShowLabel.AutoSize = true;
+            this.secSlideShowLabel.Location = new System.Drawing.Point(687, 456);
+            this.secSlideShowLabel.Name = "secSlideShowLabel";
+            this.secSlideShowLabel.Size = new System.Drawing.Size(40, 13);
+            this.secSlideShowLabel.TabIndex = 15;
+            this.secSlideShowLabel.Text = "Ml Sec";
+            this.secSlideShowLabel.Visible = false;
             // 
             // Form1
             // 
@@ -368,6 +427,9 @@ namespace imageViewer
             this.BackColor = System.Drawing.Color.Gainsboro;
             this.ClientSize = new System.Drawing.Size(877, 472);
             this.ContextMenuStrip = this.contextMenuStrip1;
+            this.Controls.Add(this.LoopSlideShow);
+            this.Controls.Add(this.secSlideShowLabel);
+            this.Controls.Add(this.numOfSeconds);
             this.Controls.Add(this.IsDarkModeEnable);
             this.Controls.Add(this.NextButton);
             this.Controls.Add(this.RotateButton);
@@ -398,6 +460,7 @@ namespace imageViewer
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.contextMenuStrip1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.numOfSeconds)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -435,6 +498,9 @@ namespace imageViewer
         private System.Windows.Forms.Button NextButton;
         private System.Windows.Forms.ToolStripMenuItem apoutToolStripMenuItem;
         private System.Windows.Forms.CheckBox IsDarkModeEnable;
+        private System.Windows.Forms.NumericUpDown numOfSeconds;
+        private System.Windows.Forms.Label secSlideShowLabel;
+        private System.Windows.Forms.CheckBox LoopSlideShow;
     }
 }
 
