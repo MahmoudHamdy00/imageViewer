@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -16,6 +17,7 @@ namespace imageViewer
     {
         private readonly string imageExtentions = "*.jpg;*.png;*.jpeg";  //extinsions to be shown
         private readonly string initialFolderToBrowse = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures);
+        private string currentPath;
 
         private readonly List<Panel> panels;                 //to store the selected images 
         private readonly List<PictureBox> pictureBoxes;              //to preview the selected images
@@ -24,6 +26,7 @@ namespace imageViewer
         private readonly SortedDictionary<string, string> data;      //to link the path of the pic with the its index in the listbox
         private readonly Button StopSlidShowButton;                  //to exit slideshow mode
         private bool IsSlideShow;                           //to know which elements to be shown  e.g rotate button  doesn't need to be shown in slideshow mod
+        int panelWidths, panelsHeight;
 
 
         public Form1()
@@ -49,7 +52,7 @@ namespace imageViewer
 
 
             IsSlideShow = false;
-            statusStrip1.Visible = false;                   //to show the progress and the name of the pic during slideshow mode
+            toolStripProgressBar1.Visible = false;                   //to show the progress and the name of the pic during slideshow mode
 
 
             //set StopSlidShowButton attributes
@@ -66,6 +69,7 @@ namespace imageViewer
             timer.Tick += Timer_Tick;
             timer.Interval = 1000;          //change image every 1 sec
 
+            currentPath = initialFolderToBrowse;
             path.Text = initialFolderToBrowse;
             UpdatePanel();                          //preview the images in the picture folder on startup              
 
@@ -75,10 +79,22 @@ namespace imageViewer
         {
             MessageBox.Show(message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
+        private bool ShowWarning(string message)
+        {
+            return MessageBox.Show(message, "Alert", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes;
+        }
         private void ShowAllButton_Click(object sender, EventArgs e)
         {
             try
             {
+                for (int i = 0; i < pictureBoxes.Count; i++)
+                {
+
+                    pictureBoxes[i].Dispose();
+
+                }
+                // return;
+
                 ShowAllButton.Enabled = false;
                 UpdatePanel();
             }
@@ -104,6 +120,7 @@ namespace imageViewer
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
                     path.Text = Directory.GetParent(openFileDialog.FileName).ToString();
+                    currentPath = path.Text;
                     //add images to the listbox
                     listBox1.Items.Clear();
                     listBox1.Items.AddRange(openFileDialog.SafeFileNames);
@@ -127,7 +144,8 @@ namespace imageViewer
             try
             {
                 path.Text = path.Text.Trim();   //remove extra spaces at starting and ending
-                toolStripStatusLabel2.Text = path.Text; //set the location in the status strip
+                currentPath = path.Text;
+                toolStripStatusLabel1.Text = path.Text; //set the location in the status strip
                 listBox1.Items.Clear();                    //remove privios images
                 if (Directory.Exists(path.Text))
                 {
@@ -184,23 +202,55 @@ namespace imageViewer
                 return new List<string>();
             }
         }
+        public static Bitmap CompressImage(string SoucePath, int quality)
+        {
 
+            Bitmap bmp1 = new Bitmap(SoucePath);
+
+            ImageCodecInfo jpgEncoder = GetEncoder(ImageFormat.Jpeg);
+
+            System.Drawing.Imaging.Encoder QualityEncoder = System.Drawing.Imaging.Encoder.Quality;
+
+            EncoderParameters myEncoderParameters = new EncoderParameters(1);
+
+            EncoderParameter myEncoderParameter = new EncoderParameter(QualityEncoder, quality);
+
+            myEncoderParameters.Param[0] = myEncoderParameter;
+            return bmp1;
+
+
+        }
+        private static ImageCodecInfo GetEncoder(ImageFormat format)
+        {
+            ImageCodecInfo[] codecs = ImageCodecInfo.GetImageDecoders();
+            foreach (ImageCodecInfo codec in codecs)
+            {
+                if (codec.FormatID == format.Guid)
+                {
+                    return codec;
+                }
+            }
+            return null;
+        }
         private void AddPictureToPanel(List<string> s)
         {
             try
             {
+
+
                 data.Clear();
                 mainPanel.Controls.Clear();
                 pictureBoxes.Clear();
                 panels.Clear();
                 if (s.Count() == 1)
                 {
-                    if (!IsSlideShow)
-                    {
-                        RotateButton.Visible = true;
-                        NextButton.Visible = true;
-                        PreviousButton.Visible = true;
-                    }
+                    /* if (!IsSlideShow)
+                     {
+                    LoopImages.Visible = true;
+                         RotateButton.Visible = true;
+                         NextButton.Visible = true;
+                         PreviousButton.Visible = true;
+                     }*/
                     panels.Add(new Panel());
                     pictureBoxes.Add(new PictureBox());
 
@@ -217,16 +267,24 @@ namespace imageViewer
                     pictureBoxes[0].Dock = DockStyle.Fill;
                     panels[0].Controls.Add(pictureBoxes[0]);
                     mainPanel.Controls.Add(panels[0]);
-                    toolStripStatusLabel2.Text = s[0];
+
+                    if (s[0].LastIndexOf('\\') != -1)
+                        toolStripStatusLabel1.Text = s[0].Substring(s[0].LastIndexOf('\\') + 1);
+                    else
+                        toolStripStatusLabel1.Text = s[0];
+
                     mainPanel.BackColor = this.BackColor;
                     return;
                 }
-                RotateButton.Visible = false;
-                NextButton.Visible = false;
-                PreviousButton.Visible = false;
-                toolStripStatusLabel2.Text = path.Text;
+                /* LoopImages.Visible = false;
+                 RotateButton.Visible = false;
+                 NextButton.Visible = false;
+                 PreviousButton.Visible = false;*/
+                toolStripStatusLabel1.Text = path.Text;
                 mainPanel.BackColor = IsDarkModeEnable.Checked ? Color.Black : Color.Silver;
                 int imageWidth = mainPanel.Width / 4 - 10, imageHeight = imageWidth * 3 / 4;
+                panelWidths = imageWidth;
+                panelsHeight = imageHeight;
                 for (int i = 0, top = 5, left = 5; i < s.Count; i++)
                 {
                     panels.Add(new Panel());
@@ -244,8 +302,10 @@ namespace imageViewer
                         BackColor = IsDarkModeEnable.Checked ? Color.Black
                         : mainPanel.BackColor,
                     };
-                    //  pictureBoxes[i].Image = new Bitmap(s[i]);
-                    pictureBoxes[i].Load(s[i]);
+                    // pictureBoxes[i].Image = CompressImage(s[i], 100);
+                    pictureBoxes[i].Image = new Bitmap(s[i]);
+                    //var thumbnail = new Thumbnail();
+                    // pictureBoxes[i].Load(s[i]);
 
                     pictureBoxes[i].MouseHover += PictureBoxes_MouseHover;
                     pictureBoxes[i].MouseLeave += PictureBoxes_MouseLeave;
@@ -311,11 +371,11 @@ namespace imageViewer
                 if (idx >= panels.Count)
                     return;
                 panels[idx].BackColor = mainPanel.BackColor;
-
-                /*   panels[idx].Width = panelWidthsNormal;
-                   panels[idx].Height = panelsHeightNormal;
-                   pictureBoxes[idx].Width = pictureBoxesWidthNormal;
-                   pictureBoxes[idx].Height = pictureBoxesHeightNormal;*/
+                /*
+                panels[idx].Width = panelWidths;
+                panels[idx].Height = panelsHeight;
+                pictureBoxes[idx].Width = panelWidths + 4;
+                pictureBoxes[idx].Height = panelsHeight + 4;*/
             }
             catch (Exception ex)
             {
@@ -331,10 +391,12 @@ namespace imageViewer
                 if (idx >= panels.Count)
                     return;
                 panels[idx].BackColor = IsDarkModeEnable.Checked ? Color.White : Color.Black;
-                /*   panels[idx].Width = panelWidthsNormal+10;
-                   panels[idx].Height = panelsHeightNormal+10;
-                   pictureBoxes[idx].Width = pictureBoxesWidthNormal+10;
-                   pictureBoxes[idx].Height = pictureBoxesHeightNormal+10;*/
+                /*      panels[idx].BringToFront();
+                      pictureBoxes[idx].BringToFront();
+                     panels[idx].Width = panelWidths + 10;
+                      panels[idx].Height = panelsHeight + 10;
+                      pictureBoxes[idx].Width = panelWidths + 4 + 10;
+                      pictureBoxes[idx].Height = panelsHeight + 4 + 10;*/
             }
             catch (Exception ex)
             {
@@ -374,7 +436,7 @@ namespace imageViewer
                 idx++;
                 if (IsSlideShow && idx == listBox1.Items.Count)
                 {
-                    if (LoopSlideShow.Checked)
+                    if (LoopImages.Checked)
                     {
                         toolStripProgressBar1.Value = 0;
                         listBox1.SelectedIndex = 0;
@@ -383,8 +445,12 @@ namespace imageViewer
                         StopSlidShowButton.PerformClick();
                 }
                 if (idx == listBox1.Items.Count)
-                    idx = 0;
-
+                {
+                    if (LoopImages.Checked)
+                        idx = 0;
+                    else
+                        return;
+                }
                 listBox1.ClearSelected();
                 listBox1.SelectedIndex = idx;
 
@@ -403,7 +469,12 @@ namespace imageViewer
                 idx--;
                 idx = Math.Max(idx, -1);
                 if (idx == -1)
-                    idx = listBox1.Items.Count - 1;
+                {
+                    if (LoopImages.Checked)
+                        idx = listBox1.Items.Count - 1;
+                    else
+                        return;
+                }
 
                 listBox1.ClearSelected();
                 listBox1.SelectedIndex = idx;
@@ -428,7 +499,7 @@ namespace imageViewer
             menuStrip1.Visible = false;
             numOfSeconds.Visible = true;
             secSlideShowLabel.Visible = true;
-            LoopSlideShow.Visible = true;
+            LoopImages.Visible = true;
 
             IsSlideShow = true;
             listBox1.ClearSelected();
@@ -438,7 +509,6 @@ namespace imageViewer
             this.WindowState = FormWindowState.Maximized;
 
             modesToolStripMenuItem.Visible = false;
-            statusStrip2.Visible = false;
             listBox1.Visible = false;
             ShowAllButton.Visible = false;
             HideShowListButton.Visible = false;
@@ -449,6 +519,8 @@ namespace imageViewer
             SlideShowButton.Visible = false;
 
             statusStrip1.Visible = true;
+            toolStripProgressBar1.Visible = true;
+            CurrentMode.Visible = false;
             StopSlidShowButton.Visible = true;
             toolStripProgressBar1.Value = 0;
             toolStripProgressBar1.Step = (100 / listBox1.Items.Count);
@@ -465,11 +537,11 @@ namespace imageViewer
 
             numOfSeconds.Visible = false;
             secSlideShowLabel.Visible = false;
-            LoopSlideShow.Visible = false;
+            LoopImages.Visible = false;
             timer.Stop();
             modesToolStripMenuItem.Visible = true;
-            statusStrip2.Visible = true;
-            statusStrip1.Visible = false;
+            CurrentMode.Visible = true;
+            toolStripProgressBar1.Visible = false;
             mainPanel.Dock = DockStyle.None;
             HideShowListButton_Click(this, new EventArgs());
             listBox1.Visible = true;
@@ -498,19 +570,38 @@ namespace imageViewer
         }
         private void SingleMode_Click(object sender, EventArgs e)
         {
+            if (listBox1.Visible)
+                HideShowListButton.PerformClick();
+            LoopImages.Visible = true;
+            RotateButton.Visible = true;
+            NextButton.Visible = true;
+            PreviousButton.Visible = true;
+
             ShowAllButton.Enabled = false;
             listBox1.SelectionMode = SelectionMode.One;
             if (listBox1.SelectedIndex == -1)
                 listBox1.SelectedIndex = 0;
-            ListBox1_SelectedIndexChanged(this, new EventArgs());//to show a single image
+            if (pictureBoxes.Count() != 1)
+            {
+                listBox1.SelectedIndex = 0;
+            }
             CurrentMode.Text = "Single Mode";
         }
 
         private void MultiMode_Click(object sender, EventArgs e)
         {
+            LoopImages.Visible = false;
+            RotateButton.Visible = false;
+            NextButton.Visible = false;
+            PreviousButton.Visible = false;
+
+            if (!listBox1.Visible)
+                HideShowListButton.PerformClick();
             ShowAllButton.Enabled = true;
             listBox1.SelectionMode = SelectionMode.MultiExtended;
             CurrentMode.Text = "Multi Mode";
+            if (pictureBoxes.Count == 1)
+                ShowAllButton.PerformClick();
         }
 
         private void HideShowListButton_Click(object sender, EventArgs e)
@@ -564,9 +655,16 @@ namespace imageViewer
         {
             if (IsDarkModeEnable.Checked)
             {
+                /*foreach (var cur in this.Controls)
+                {
+                    if (cur.GetType().ToString().Equals("System.Windows.Forms.Button"))
+                    {
+                        ((Button)(cur)).BackColor = Color.Black;
+                    }
+
+                }*/
                 this.BackColor = Color.Black;
                 statusStrip1.BackColor = Color.Black;
-                statusStrip2.BackColor = Color.Black;
                 listBox1.BackColor = Color.Black;
                 path.BackColor = Color.Black;
                 mainPanel.BackColor = Color.Black;
@@ -583,7 +681,6 @@ namespace imageViewer
 
                 this.ForeColor = Color.White;
                 statusStrip1.ForeColor = Color.White;
-                statusStrip2.ForeColor = Color.White;
                 listBox1.ForeColor = Color.White;
                 numOfSeconds.ForeColor = Color.White;
 
@@ -602,7 +699,6 @@ namespace imageViewer
             {
                 this.BackColor = Color.Gainsboro;
                 statusStrip1.BackColor = Color.White;
-                statusStrip2.BackColor = Color.White;
                 listBox1.BackColor = Color.White;
                 path.BackColor = Color.White;
                 mainPanel.BackColor = Color.Silver;
@@ -618,7 +714,6 @@ namespace imageViewer
 
                 this.ForeColor = Color.Black;
                 statusStrip1.ForeColor = Color.Black;
-                statusStrip2.ForeColor = Color.Black;
                 listBox1.ForeColor = Color.Black;
                 path.ForeColor = Color.Black;
                 mainPanel.ForeColor = Color.DarkGray;
@@ -644,11 +739,33 @@ namespace imageViewer
             ListBox1_SelectedIndexChanged(this, new EventArgs());
         }
 
+
+        private void path_TextChanged(object sender, EventArgs e)
+        {
+            if (!Directory.Exists(path.Text))
+            {
+                errorProvider1.SetError(path, "The Path Isn't Valid");
+            }
+            else
+            {
+                errorProvider1.Clear();
+                if (currentPath == path.Text || path.Text == "")
+                    return;
+                if (ShowWarning("Do you want to change current dirictory?\nif yes it will remove all imeges in the list box"))
+                {
+                    currentPath = path.Text;
+                    ShowAllButton.PerformClick();
+                }
+                else
+                {
+                    path.Text = currentPath;
+                }
+            }
+        }
         private void ExitToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             if (MessageBox.Show("Are You Sure you want to exit..?", "Exit", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                 Application.Exit();
         }
-
     }
 }
