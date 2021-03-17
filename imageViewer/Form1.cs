@@ -1,14 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace imageViewer
@@ -242,7 +237,7 @@ namespace imageViewer
                 mainPanel.Controls.Clear();
                 pictureBoxes.Clear();
                 panels.Clear();
-                if (s.Count() == 1)
+                if (s.Count == 1)
                 {
                     /* if (!IsSlideShow)
                      {
@@ -548,9 +543,12 @@ namespace imageViewer
             ShowAllButton.Visible = true;
             HideShowListButton.Visible = true;
             BrowseButton.Visible = true;
-            NextButton.Visible = true;
-            PreviousButton.Visible = true;
-            RotateButton.Visible = true;
+            if (CurrentMode.Text == "Single Mode")
+            {
+                NextButton.Visible = true;
+                PreviousButton.Visible = true;
+                RotateButton.Visible = true;
+            }
             SlideShowButton.Visible = true;
 
             path.Visible = true;
@@ -581,7 +579,7 @@ namespace imageViewer
             listBox1.SelectionMode = SelectionMode.One;
             if (listBox1.SelectedIndex == -1)
                 listBox1.SelectedIndex = 0;
-            if (pictureBoxes.Count() != 1)
+            if (pictureBoxes.Count != 1)
             {
                 listBox1.SelectedIndex = 0;
             }
@@ -644,7 +642,7 @@ namespace imageViewer
         {
             InfoForm infoForm = new InfoForm(IsDarkModeEnable.Checked);
             infoForm.Visible = true;
-            return;
+
         }
 
 
