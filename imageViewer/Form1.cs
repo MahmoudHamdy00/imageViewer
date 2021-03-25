@@ -239,13 +239,7 @@ namespace imageViewer
                 panels.Clear();
                 if (s.Count == 1)
                 {
-                    /* if (!IsSlideShow)
-                     {
-                    LoopImages.Visible = true;
-                         RotateButton.Visible = true;
-                         NextButton.Visible = true;
-                         PreviousButton.Visible = true;
-                     }*/
+                  
                     panels.Add(new Panel());
                     pictureBoxes.Add(new PictureBox());
 
@@ -271,10 +265,7 @@ namespace imageViewer
                     mainPanel.BackColor = this.BackColor;
                     return;
                 }
-                /* LoopImages.Visible = false;
-                 RotateButton.Visible = false;
-                 NextButton.Visible = false;
-                 PreviousButton.Visible = false;*/
+               
                 toolStripStatusLabel1.Text = path.Text;
                 mainPanel.BackColor = IsDarkModeEnable.Checked ? Color.Black : Color.Silver;
                 int imageWidth = mainPanel.Width / 4 - 10, imageHeight = imageWidth * 3 / 4;
@@ -366,6 +357,7 @@ namespace imageViewer
                 if (idx >= panels.Count)
                     return;
                 panels[idx].BackColor = mainPanel.BackColor;
+                //not working
                 /*
                 panels[idx].Width = panelWidths;
                 panels[idx].Height = panelsHeight;
@@ -386,6 +378,7 @@ namespace imageViewer
                 if (idx >= panels.Count)
                     return;
                 panels[idx].BackColor = IsDarkModeEnable.Checked ? Color.White : Color.Black;
+                //not working
                 /*      panels[idx].BringToFront();
                       pictureBoxes[idx].BringToFront();
                      panels[idx].Width = panelWidths + 10;
@@ -653,6 +646,7 @@ namespace imageViewer
         {
             if (IsDarkModeEnable.Checked)
             {
+                //not working
                 /*foreach (var cur in this.Controls)
                 {
                     if (cur.GetType().ToString().Equals("System.Windows.Forms.Button"))
