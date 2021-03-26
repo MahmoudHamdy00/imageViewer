@@ -36,6 +36,7 @@ namespace imageViewer
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripProgressBar1 = new System.Windows.Forms.ToolStripProgressBar();
+            this.CurrentMode = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -62,7 +63,6 @@ namespace imageViewer
             this.IsDarkModeEnable = new System.Windows.Forms.CheckBox();
             this.secSlideShowLabel = new System.Windows.Forms.Label();
             this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
-            this.CurrentMode = new System.Windows.Forms.ToolStripStatusLabel();
             this.statusStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
@@ -130,6 +130,13 @@ namespace imageViewer
             this.toolStripProgressBar1.Name = "toolStripProgressBar1";
             this.toolStripProgressBar1.Size = new System.Drawing.Size(267, 18);
             // 
+            // CurrentMode
+            // 
+            this.CurrentMode.Margin = new System.Windows.Forms.Padding(5, 3, 20, 2);
+            this.CurrentMode.Name = "CurrentMode";
+            this.CurrentMode.Size = new System.Drawing.Size(86, 21);
+            this.CurrentMode.Text = "Multi Mode";
+            // 
             // toolStripStatusLabel1
             // 
             this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
@@ -144,7 +151,6 @@ namespace imageViewer
             this.modesToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Padding = new System.Windows.Forms.Padding(8, 2, 0, 2);
             this.menuStrip1.Size = new System.Drawing.Size(1169, 28);
             this.menuStrip1.TabIndex = 10;
             this.menuStrip1.Text = "menuStrip1";
@@ -317,7 +323,7 @@ namespace imageViewer
             0,
             0});
             this.numOfSeconds.Location = new System.Drawing.Point(832, 559);
-            this.numOfSeconds.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.numOfSeconds.Margin = new System.Windows.Forms.Padding(4);
             this.numOfSeconds.Maximum = new decimal(new int[] {
             1410065408,
             2,
@@ -345,7 +351,7 @@ namespace imageViewer
             this.LoopImages.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.LoopImages.AutoSize = true;
             this.LoopImages.Location = new System.Drawing.Point(982, 560);
-            this.LoopImages.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.LoopImages.Margin = new System.Windows.Forms.Padding(4);
             this.LoopImages.Name = "LoopImages";
             this.LoopImages.Size = new System.Drawing.Size(62, 21);
             this.LoopImages.TabIndex = 16;
@@ -389,7 +395,7 @@ namespace imageViewer
             this.IsDarkModeEnable.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.IsDarkModeEnable.AutoSize = true;
             this.IsDarkModeEnable.Location = new System.Drawing.Point(1058, 560);
-            this.IsDarkModeEnable.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.IsDarkModeEnable.Margin = new System.Windows.Forms.Padding(4);
             this.IsDarkModeEnable.Name = "IsDarkModeEnable";
             this.IsDarkModeEnable.Size = new System.Drawing.Size(99, 21);
             this.IsDarkModeEnable.TabIndex = 13;
@@ -412,13 +418,6 @@ namespace imageViewer
             // errorProvider1
             // 
             this.errorProvider1.ContainerControl = this;
-            // 
-            // CurrentMode
-            // 
-            this.CurrentMode.Margin = new System.Windows.Forms.Padding(5, 3, 20, 2);
-            this.CurrentMode.Name = "CurrentMode";
-            this.CurrentMode.Size = new System.Drawing.Size(86, 21);
-            this.CurrentMode.Text = "Multi Mode";
             // 
             // Form1
             // 
