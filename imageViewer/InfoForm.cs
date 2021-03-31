@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -26,7 +27,9 @@ namespace imageViewer
         }
         private void InfoForm_Load(object sender, EventArgs e)
         {
-            pictureBox1.Image = Image.FromFile(@"C:\Users\Mahmoud Hamdy\OneDrive - Assuit University - Staff\Documents\GitHub\imageViewer\imageViewer\Resources\Personal Photo.jpg");
+            string path = Environment.CurrentDirectory;
+            path = path.Replace("bin\\Debug", "Resources\\Personal Photo.jpg");
+            pictureBox1.Image = Image.FromFile(path);
             groupBox1.Paint += groupBox1_Paint;
             if (DarkMode)
             {
@@ -115,6 +118,11 @@ namespace imageViewer
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             Process.Start("https://github.com/MahmoudHamdy00");
+        }
+
+        private void pictureBox1_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
