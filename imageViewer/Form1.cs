@@ -33,6 +33,7 @@ namespace imageViewer
             StopSlidShowButton = new Button();
             timer = new System.Windows.Forms.Timer();
         }
+
         private void Form1_Load(object sender, EventArgs e)
         {
             //set the width and the height of the form window to fit the screan
@@ -78,6 +79,11 @@ namespace imageViewer
         {
             return MessageBox.Show(message, "Alert", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes;
         }
+
+        /// <summary>
+        /// Show All images in the current folder
+        /// </summary>
+  
         private void ShowAllButton_Click(object sender, EventArgs e)
         {
             try
@@ -102,6 +108,12 @@ namespace imageViewer
                 ShowAllButton.Enabled = true;
             }
         }
+        /// <summary>
+        /// to choose pics to be viwed
+        /// </summary>
+        /// <remarks>
+        /// it will remove the current viewd pics
+        /// </remarks>
         private void BrowseButton_Click(object sender, EventArgs e)
         {
             try
@@ -197,36 +209,7 @@ namespace imageViewer
                 return new List<string>();
             }
         }
-        public static Bitmap CompressImage(string SoucePath, int quality)
-        {
-
-            Bitmap bmp1 = new Bitmap(SoucePath);
-
-            ImageCodecInfo jpgEncoder = GetEncoder(ImageFormat.Jpeg);
-
-            System.Drawing.Imaging.Encoder QualityEncoder = System.Drawing.Imaging.Encoder.Quality;
-
-            EncoderParameters myEncoderParameters = new EncoderParameters(1);
-
-            EncoderParameter myEncoderParameter = new EncoderParameter(QualityEncoder, quality);
-
-            myEncoderParameters.Param[0] = myEncoderParameter;
-            return bmp1;
-
-
-        }
-        private static ImageCodecInfo GetEncoder(ImageFormat format)
-        {
-            ImageCodecInfo[] codecs = ImageCodecInfo.GetImageDecoders();
-            foreach (ImageCodecInfo codec in codecs)
-            {
-                if (codec.FormatID == format.Guid)
-                {
-                    return codec;
-                }
-            }
-            return null;
-        }
+      
         private void AddPictureToPanel(List<string> s)
         {
             try
@@ -346,7 +329,6 @@ namespace imageViewer
                 ShowError(ex.Message);
             }
         }
-
         //events on the shown images
         private void PictureBoxes_MouseLeave(object sender, EventArgs e)
         {
@@ -637,11 +619,6 @@ namespace imageViewer
             infoForm.Visible = true;
 
         }
-
-
-
-
-
         private void IsDarkModeEnable_CheckedChanged(object sender, EventArgs e)
         {
             if (IsDarkModeEnable.Checked)
@@ -683,9 +660,6 @@ namespace imageViewer
                 BrowseButton.ForeColor = Color.Black;
                 SlideShowButton.ForeColor = Color.Black;
                 HideShowListButton.ForeColor = Color.Black;
-
-
-
             }
             else
             {
@@ -711,7 +685,6 @@ namespace imageViewer
                 mainPanel.ForeColor = Color.DarkGray;
                 menuStrip1.ForeColor = Color.Black;
                 numOfSeconds.ForeColor = Color.Black;
-
             }
 
             ReloadContent();
@@ -730,8 +703,6 @@ namespace imageViewer
             }
             ListBox1_SelectedIndexChanged(this, new EventArgs());
         }
-
-
         private void path_TextChanged(object sender, EventArgs e)
         {
             if (!Directory.Exists(path.Text))

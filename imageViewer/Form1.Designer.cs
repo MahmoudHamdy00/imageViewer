@@ -63,6 +63,7 @@ namespace imageViewer
             this.IsDarkModeEnable = new System.Windows.Forms.CheckBox();
             this.secSlideShowLabel = new System.Windows.Forms.Label();
             this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
+            this.exitToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
@@ -167,14 +168,14 @@ namespace imageViewer
             // apoutToolStripMenuItem
             // 
             this.apoutToolStripMenuItem.Name = "apoutToolStripMenuItem";
-            this.apoutToolStripMenuItem.Size = new System.Drawing.Size(133, 26);
+            this.apoutToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.apoutToolStripMenuItem.Text = "About";
             this.apoutToolStripMenuItem.Click += new System.EventHandler(this.apoutToolStripMenuItem_Click);
             // 
             // exitToolStripMenuItem1
             // 
             this.exitToolStripMenuItem1.Name = "exitToolStripMenuItem1";
-            this.exitToolStripMenuItem1.Size = new System.Drawing.Size(133, 26);
+            this.exitToolStripMenuItem1.Size = new System.Drawing.Size(224, 26);
             this.exitToolStripMenuItem1.Text = "Exit";
             this.exitToolStripMenuItem1.Click += new System.EventHandler(this.ExitToolStripMenuItem1_Click);
             // 
@@ -215,28 +216,29 @@ namespace imageViewer
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.SingleMode_ContextMenuStrip,
             this.MultiMode_ContextMenuStrip,
-            this.SlideShowMode_ContextMenuStrip});
+            this.SlideShowMode_ContextMenuStrip,
+            this.exitToolStripMenuItem2});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(163, 76);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(211, 128);
             // 
             // SingleMode_ContextMenuStrip
             // 
             this.SingleMode_ContextMenuStrip.Name = "SingleMode_ContextMenuStrip";
-            this.SingleMode_ContextMenuStrip.Size = new System.Drawing.Size(162, 24);
+            this.SingleMode_ContextMenuStrip.Size = new System.Drawing.Size(210, 24);
             this.SingleMode_ContextMenuStrip.Text = "Single Mode";
             this.SingleMode_ContextMenuStrip.Click += new System.EventHandler(this.SingleMode_Click);
             // 
             // MultiMode_ContextMenuStrip
             // 
             this.MultiMode_ContextMenuStrip.Name = "MultiMode_ContextMenuStrip";
-            this.MultiMode_ContextMenuStrip.Size = new System.Drawing.Size(162, 24);
+            this.MultiMode_ContextMenuStrip.Size = new System.Drawing.Size(210, 24);
             this.MultiMode_ContextMenuStrip.Text = "Multi Mode";
             this.MultiMode_ContextMenuStrip.Click += new System.EventHandler(this.MultiMode_Click);
             // 
             // SlideShowMode_ContextMenuStrip
             // 
             this.SlideShowMode_ContextMenuStrip.Name = "SlideShowMode_ContextMenuStrip";
-            this.SlideShowMode_ContextMenuStrip.Size = new System.Drawing.Size(162, 24);
+            this.SlideShowMode_ContextMenuStrip.Size = new System.Drawing.Size(210, 24);
             this.SlideShowMode_ContextMenuStrip.Text = "SlideShow";
             this.SlideShowMode_ContextMenuStrip.Click += new System.EventHandler(this.SlideShowButton_Click);
             // 
@@ -419,6 +421,13 @@ namespace imageViewer
             // 
             this.errorProvider1.ContainerControl = this;
             // 
+            // exitToolStripMenuItem2
+            // 
+            this.exitToolStripMenuItem2.Name = "exitToolStripMenuItem2";
+            this.exitToolStripMenuItem2.Size = new System.Drawing.Size(210, 24);
+            this.exitToolStripMenuItem2.Text = "Exit";
+            this.exitToolStripMenuItem2.Click += new System.EventHandler(this.ExitToolStripMenuItem1_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -497,6 +506,7 @@ namespace imageViewer
         private System.Windows.Forms.CheckBox LoopImages;
         private System.Windows.Forms.ErrorProvider errorProvider1;
         private System.Windows.Forms.ToolStripStatusLabel CurrentMode;
+        private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem2;
     }
 }
 
